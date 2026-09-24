@@ -29,11 +29,13 @@ import { socials, profile, song } from '../data/site';
   </div>
 
   <div class="footer__bottom wrap">
-    <p class="credit">
-      Made with <span class="credit__peach" aria-label="ลูกพีช">🍑</span> by <b>Master Tankhun | Tankhun Gaming</b>
-      <span class="credit__sep" aria-hidden="true">·</span>
-      <a href="https://github.com/MASTER-TANKHUN" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"></use></svg>github</a>
-    </p>
+    <div class="credit">
+      <p class="credit__by">Made with <span class="credit__peach" aria-label="ลูกพีช">🍑</span> by <b>Master Tankhun | Tankhun Gaming</b></p>
+      <p class="credit__links">
+        <a class="credit__link" href="https://github.com/MASTER-TANKHUN" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"></use></svg>github</a>
+        <a class="credit__link" href="https://github.com/MASTER-TANKHUN/PeachiView" target="_blank" rel="noopener" title="ซอร์สโค้ดของเว็บนี้บน GitHub"><svg aria-hidden="true"><use href="#i-code"></use></svg>source code</a>
+      </p>
+    </div>
     <p class="footer__note">
       เว็บแฟนเมดโดยลูกพีชน้อย ไม่ใช่เว็บทางการของ PeachiView · ภาพ ตัวละคร และคลิปทั้งหมดเป็นของ PeachiView
     </p>
@@ -81,11 +83,19 @@ import { socials, profile, song } from '../data/site';
   .soc--youtube svg { color: #ff2d55; } .soc--x svg { color: #111; } .soc--instagram svg { color: #d6249f; } .soc--tiktok svg { color: #111; }
 
   .footer__bottom { border-top: 2px dashed var(--pink-200); padding-top: 22px; display: grid; gap: 6px; text-align: center; }
-  .credit { font-size: 1rem; }
-  .credit b { font-weight: 500; color: var(--pink-500); }
-  .credit__sep { margin: 0 6px; color: var(--ink-faint); }
-  .credit a { display: inline-flex; align-items: center; gap: 5px; color: var(--ink); font-weight: 400; }
-  .credit a svg { width: 18px; height: 18px; }
+  /* one centred row: the byline, then the links as little pills (they wrap under it on phones) */
+  .credit { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 14px; font-size: 1rem; }
+  .credit b { font-weight: 500; color: var(--pink-500); white-space: nowrap; }
+  .credit__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .credit__link {
+    display: flex; align-items: center; gap: 6px; line-height: 1;
+    padding: 6px 12px 6px 9px; border-radius: 999px;
+    background: #fff; border: 2px solid var(--pink-200); color: var(--ink);
+    font-size: 0.9rem; font-weight: 400; text-decoration: none;
+    transition: transform 0.25s var(--ease-pop), border-color 0.2s, color 0.2s;
+  }
+  .credit__link:hover { transform: translateY(-2px) rotate(-2deg); border-color: var(--pink-400); color: var(--pink-600); }
+  .credit__link svg { width: 17px; height: 17px; flex: none; }
   .footer__note { font-size: 0.8rem; color: var(--ink-faint); }
 
   .totop { position: absolute; right: clamp(14px, 4vw, 48px); bottom: calc(96px + env(safe-area-inset-bottom)); display: grid; justify-items: center; gap: 2px; width: 74px; padding: 0; border: 0; background: none; color: var(--ink-soft); }
