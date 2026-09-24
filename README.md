@@ -27,48 +27,6 @@
 
 อีสเตอร์เอ้ก: พิมพ์ `peach` บนคีย์บอร์ด, กด Konami code, จิ้มลูกพีชทุกตัว 🍑
 
-## เริ่มใช้งาน
-
-ต้องใช้ Node.js 22.12 ขึ้นไป
-
-```bash
-npm install
-npm run dev      # http://localhost:4321
-npm run build    # build สำหรับ production
-```
-
-## ขึ้น Vercel
-
-1. เข้า [vercel.com/new](https://vercel.com/new) → **Import** repo นี้
-2. Framework จะขึ้นเป็น **Astro** ให้อัตโนมัติ → กด **Deploy**
-3. เสร็จ! ต่อจากนี้ push ขึ้น GitHub เมื่อไหร่ Vercel ก็ deploy ใหม่ให้เอง
-
-ไม่ต้องตั้งค่า env ใดๆ — ถ้าอยากให้ `/api/latest.json` ใช้ YouTube Data API แทนการอ่านหน้าช่อง ให้ใส่ `YOUTUBE_API_KEY` ใน Environment Variables ของ Vercel (ไม่บังคับ)
-
-## แก้ไขเนื้อหา
-
-- **ข้อความ / จดหมาย / ไทม์ไลน์ / ร่างโมเดล** → `src/data/site.ts`
-- **เนื้อเพลงคาราโอเกะ** → `song.lrc` ใน `src/data/site.ts` ใส่แบบ LRC (เวลาในคลิป YouTube) เช่น
-
-  ```
-  [00:36.50] ท่อนแรก
-  [00:40.10] ท่อนถัดไป
-  ```
-  ถ้าเว้นว่าง กล่องคาราโอเกะจะโชว์ชื่อเพลงแทน (เนื้อเพลงมีลิขสิทธิ์ เลยไม่ได้ใส่ไว้ให้)
-- **อัปเดตรายชื่อคลิป / สถิติช่อง** → `python scripts/fetch_channel.py` (อัปเดต `src/data/videos.json`, `channel.json`)
-- **รูปวาดใน Hero** → `python scripts/build_portrait.py <cutout.png> public/portrait 1200`
-  (ต้องติดตั้ง `pip install -r scripts/requirements.txt`)
-
-## QR code 🍑
-
-QR น่ารักๆ สไตล์ PeachiView (หน้าต่าง PeachiOS หูแมว จุดกลมไล่สี ลูกพีชใส่หูฟังตรงกลาง) ลิงก์ไปที่
-https://peachi-view-fanart-website.vercel.app/
-
-- `public/qr/peachiview-qr.png` — 2000×2720 พร้อมแชร์/พิมพ์ (หลังขึ้น Vercel เปิดได้ที่ `/qr/peachiview-qr.png`)
-- `public/qr/peachiview-qr.svg` — เวกเตอร์ คมทุกขนาด (ฝังฟอนต์ไว้แล้ว)
-- สร้างใหม่ (เช่นเปลี่ยนลิงก์): `python scripts/make_qr.py "https://ลิงก์ใหม่" public/qr/peachiview-qr.svg`
-  แล้วเปิด SVG ในเบราว์เซอร์เพื่อเซฟเป็นรูป — ใช้ error correction ระดับ H เลยสแกนได้แม้มีลูกพีชบังตรงกลาง
-  (ทดสอบแล้วด้วย ZXing ทั้งภาพเบลอ เอียง บีบอัด และย่อเหลือ 15%)
 
 ## เทคโนโลยี
 
