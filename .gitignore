@@ -1,0 +1,20 @@
+# build output
+dist/
+.vercel/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs & env
+npm-debug.log*
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

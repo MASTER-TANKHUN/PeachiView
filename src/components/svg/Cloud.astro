@@ -1,0 +1,13 @@
+---
+interface Props { class?: string; style?: string; id: string; tint?: string }
+const { class: cls = '', style, id, tint = '#fbe3f1' } = Astro.props;
+---
+<svg class:list={['cloud', cls]} style={style} viewBox="0 0 320 140" aria-hidden="true" preserveAspectRatio="xMidYMax meet">
+  <defs>
+    <linearGradient id={`${id}-g`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"></stop>
+      <stop offset="1" stop-color={tint}></stop>
+    </linearGradient>
+  </defs>
+  <path d="M30 128c-20 0-28-26-8-36-4-26 30-40 48-24 6-30 50-40 70-14 16-26 64-24 72 10 26-10 52 8 46 32 22 4 24 32 2 32Z" fill={`url(#${id}-g)`}></path>
+</svg>

@@ -1,0 +1,72 @@
+---
+const items = [
+  { href: '#about', icon: 'user', label: 'พีชชี่' },
+  { href: '#models', icon: 'layers', label: 'ร่าง' },
+  { href: '#journey', icon: 'cal', label: 'ไดอารี่' },
+  { href: '#comeback', icon: 'heart', label: 'คัมแบ็ก' },
+  { href: '#radio', icon: 'note', label: 'เพลง' },
+  { href: '#videos', icon: 'film', label: 'คลิป' },
+  { href: '#letter', icon: 'mail', label: 'จดหมาย' },
+];
+---
+<div class="progress" aria-hidden="true"><span class="progress__bar"></span><svg class="progress__peach"><use href="#i-peach"></use></svg></div>
+<nav class="taskbar" aria-label="เมนูหลัก">
+  <a class="taskbar__start" href="#top" aria-label="กลับไปด้านบน">
+    <svg aria-hidden="true"><use href="#i-peach"></use></svg><span>start</span>
+  </a>
+  <ul class="taskbar__list">
+    {items.map((it) => (
+      <li>
+        <a href={it.href} data-nav={it.href.slice(1)}>
+          <svg aria-hidden="true"><use href={`#i-${it.icon}`} /></svg>
+          <span>{it.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <span class="taskbar__clock" aria-hidden="true" data-clock>--:--</span>
+</nav>
+
+<style>
+  .progress { position: fixed; left: 0; right: 0; top: 0; height: 5px; z-index: 900; pointer-events: none; }
+  .progress__bar { position: absolute; inset: 0; background: linear-gradient(90deg, var(--pink-300), var(--pink-400), var(--lilac-400)); transform-origin: 0 50%; transform: scaleX(0); border-radius: 0 4px 4px 0; }
+  .progress__peach { position: absolute; top: -2px; left: 0; width: 20px; height: 20px; translate: -10px 0; }
+
+  .taskbar {
+    position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 900;
+    translate: -50% 0;
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 2px solid var(--pink-200);
+    box-shadow: 0 16px 40px -18px rgba(201, 45, 130, 0.6);
+    max-width: calc(100vw - 20px);
+  }
+  :global(.js) .taskbar { transform: translateY(140%); }
+  .taskbar__start {
+    display: flex; align-items: center; gap: 6px; padding: 6px 12px 6px 8px; border-radius: 14px;
+    background: linear-gradient(180deg, #ffc9e8, #f9a3d6); border: 2px solid var(--pink-300);
+    font-family: var(--font-pixel); font-weight: 700; color: var(--ink); text-decoration: none; font-size: 0.9rem;
+  }
+  .taskbar__start svg { width: 22px; height: 22px; }
+  .taskbar__list { display: flex; gap: 2px; list-style: none; margin: 0; padding: 0; }
+  .taskbar__list a {
+    display: grid; justify-items: center; gap: 0; padding: 5px 10px 3px; border-radius: 12px;
+    color: var(--ink-soft); text-decoration: none; font-size: 0.7rem; line-height: 1.2;
+    transition: background 0.2s, color 0.2s, transform 0.3s var(--ease-pop);
+  }
+  .taskbar__list a svg { width: 22px; height: 22px; }
+  .taskbar__list a:hover { background: var(--pink-50); transform: translateY(-3px); }
+  .taskbar__list a.is-active { background: var(--pink-100); color: var(--pink-600); }
+  .taskbar__clock { font-family: var(--font-pixel); font-size: 0.85rem; color: var(--ink-soft); padding: 0 10px 0 6px; font-variant-numeric: tabular-nums; }
+  @media (max-width: 700px) {
+    .taskbar__start span, .taskbar__clock { display: none; }
+    .taskbar__start { padding: 6px; }
+    .taskbar__list a { padding: 5px 7px 3px; font-size: 0.62rem; }
+    .taskbar__list a svg { width: 20px; height: 20px; }
+  }
+  @media (max-width: 460px) {
+    .taskbar__list a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .taskbar__list a { padding: 8px; }
+  }
+</style>

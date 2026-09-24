@@ -1,0 +1,20 @@
+---
+/** Pixel heart from the PeachiView banner: white fill, pink pixel outline. */
+interface Props { class?: string; style?: string }
+const { class: cls = '', style } = Astro.props;
+const map = [
+  '.XX...XX.',
+  'XWWX.XWWX',
+  'XWWWXWWWX',
+  'XWWWWWWWX',
+  '.XWWWWWX.',
+  '..XWWWX..',
+  '...XWX...',
+  '....X....',
+];
+const px: { x: number; y: number; c: string }[] = [];
+map.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== '.') px.push({ x, y, c: ch === 'X' ? '#f569c0' : '#ffffff' }); }));
+---
+<svg class:list={['pxheart', cls]} style={style} viewBox="0 0 9 8" shape-rendering="crispEdges" aria-hidden="true">
+  {px.map((p) => <rect x={p.x} y={p.y} width="1.02" height="1.02" fill={p.c} />)}
+</svg>

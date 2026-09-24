@@ -1,0 +1,92 @@
+---
+import PeachMascot from './svg/PeachMascot.astro';
+import PixelHeart from './svg/PixelHeart.astro';
+---
+
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__bg"></div>
+  <PixelHeart class="loader__heart loader__heart--1" />
+  <PixelHeart class="loader__heart loader__heart--2" />
+  <PixelHeart class="loader__heart loader__heart--3" />
+
+  <div class="loader__inner">
+    <div class="loader__peach">
+      <PeachMascot id="lp" class="loader__mascot" idle={false} />
+      <svg class="loader__sketch" viewBox="0 0 200 200" fill="none" stroke="#c92d82" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M100 54C86 36 57 31 38 46 18 62 14 97 23 128c10 36 42 58 77 58s67-22 77-58c9-31 5-66-15-82-19-15-48-10-62 8Z"></path>
+        <path d="M99 51C88 31 64 20 41 25c6 20 31 32 58 26Z"></path>
+        <path d="M102 50c7-24 32-39 58-34-6 23-31 38-58 34Z"></path>
+        <path d="M100 57c-8 20-8 42 4 64"></path>
+        <path d="M26 120C24 52 176 52 174 120"></path>
+        <path d="M34 84 36 44l30 22Z"></path>
+        <path d="M166 84 164 44l-30 22Z"></path>
+        <rect x="8" y="98" width="30" height="46" rx="14"></rect>
+        <rect x="162" y="98" width="30" height="46" rx="14"></rect>
+        <ellipse cx="73" cy="122" rx="11.5" ry="13.5"></ellipse>
+        <ellipse cx="127" cy="122" rx="11.5" ry="13.5"></ellipse>
+        <path d="M89 139q5.5 6.5 11 0q5.5 6.5 11 0"></path>
+      </svg>
+    </div>
+    <p class="loader__brand">Peachi<span>OS</span></p>
+    <div class="loader__bar" role="presentation">
+      {Array.from({ length: 16 }, () => <i></i>)}
+    </div>
+    <p class="loader__msg"><span class="loader__text">กำลังปลุกพีชชี่…</span> <b class="loader__pct">0%</b></p>
+  </div>
+  <button class="loader__skip" type="button" tabindex="-1">ข้าม ›</button>
+</div>
+
+<style>
+  .loader { display: none; }
+  :global(.js) .loader {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    color: var(--ink);
+    clip-path: circle(150% at 50% 50%);
+  }
+  .loader__bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60% 50% at 20% 20%, #ffd3ec 0%, transparent 70%),
+      radial-gradient(50% 50% at 85% 25%, #dcd0ff 0%, transparent 70%),
+      radial-gradient(60% 60% at 70% 90%, #cfe3ff 0%, transparent 70%),
+      linear-gradient(160deg, #fff0f8, #fde2f1);
+  }
+  .loader__bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg, rgba(255,255,255,.35) 0 2px, transparent 2px 9px);
+    opacity: .5;
+  }
+  .loader :global(.loader__heart) { position: absolute; width: 38px; opacity: .9; }
+  .loader :global(.loader__heart--1) { left: 12%; top: 18%; width: 46px; }
+  .loader :global(.loader__heart--2) { right: 14%; top: 28%; width: 30px; }
+  .loader :global(.loader__heart--3) { left: 22%; bottom: 16%; width: 26px; }
+  .loader__inner { position: relative; display: grid; justify-items: center; gap: 14px; padding: 24px; }
+  .loader__peach { position: relative; width: clamp(130px, 22vw, 190px); aspect-ratio: 1; }
+  .loader__peach :global(.loader__mascot), .loader__sketch { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .loader__brand {
+    font-family: var(--font-pixel); font-weight: 700;
+    font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1; letter-spacing: 0.02em;
+    color: var(--pink-400);
+    text-shadow: 0 3px 0 #fff, 3px 0 0 #fff, -3px 0 0 #fff, 0 -3px 0 #fff, 0 6px 0 var(--pink-200);
+  }
+  .loader__brand span { color: var(--lilac-400); }
+  .loader__bar {
+    display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px;
+    width: min(280px, 70vw); height: 18px; padding: 3px;
+    background: #fff; border: 2px solid var(--pink-300); border-radius: 6px;
+  }
+  .loader__bar i { background: var(--pink-100); border-radius: 2px; }
+  .loader__bar i.on { background: linear-gradient(180deg, var(--pink-300), var(--pink-400)); }
+  .loader__msg { font-size: 0.95rem; color: var(--ink-soft); min-height: 1.7em; }
+  .loader__pct { font-family: var(--font-pixel); color: var(--pink-500); font-weight: 500; }
+  .loader__skip {
+    position: absolute; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom));
+    background: #fff; border: 2px solid var(--pink-200); border-radius: 99px;
+    padding: 6px 14px; font-size: 0.85rem; color: var(--ink-soft);
+  }
+</style>

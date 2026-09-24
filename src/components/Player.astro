@@ -1,0 +1,28 @@
+---
+/** One shared <dialog> video player ("player.exe"); any element with [data-video] opens it. */
+---
+<dialog class="player" aria-labelledby="player-title" data-player>
+  <div class="win player__win">
+    <div class="win__bar">
+      <span class="win__title"><svg width="16" height="16" aria-hidden="true"><use href="#i-film"></use></svg><span id="player-title" data-player-title>player.exe</span></span>
+      <span class="win__btns">
+        <a class="win__btn player__yt" data-player-link href="#" target="_blank" rel="noopener" aria-label="เปิดบน YouTube"><svg><use href="#i-out"></use></svg></a>
+        <button class="win__btn" type="button" data-player-close aria-label="ปิด"><svg><use href="#i-close"></use></svg></button>
+      </span>
+    </div>
+    <div class="player__screen" data-player-screen></div>
+    <p class="player__meta" data-player-meta></p>
+  </div>
+</dialog>
+
+<style>
+  .player { width: min(960px, calc(100vw - 24px)); max-width: none; padding: 0; border: 0; background: none; overflow: visible; }
+  .player::backdrop { background: rgba(74, 31, 46, 0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .player__win { box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.5); }
+  .player__screen { position: relative; aspect-ratio: 16 / 9; background: #1a1016; }
+  .player__screen :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .player__meta { padding: 10px 14px 12px; font-size: 0.85rem; color: var(--ink-soft); }
+  .player__yt { color: var(--pink-500); }
+  .player :global(.win__btn) { width: 26px; height: 22px; }
+  .player :global(.win__btn svg) { width: 12px; height: 12px; }
+</style>

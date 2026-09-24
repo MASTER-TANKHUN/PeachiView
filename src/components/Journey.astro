@@ -1,0 +1,115 @@
+---
+import Scribble from './svg/Scribble.astro';
+import { journey, video, thumb, thaiDate, filmStamp, compact } from '../data/site';
+
+const tapes = ['washi', 'washi washi--dots', 'washi washi--peach', 'washi washi--sky'];
+// a hand-drawn wavy vine for the whole column (viewBox 0 0 100 1000, stretched)
+let d = 'M50 0';
+for (let y = 0; y < 1000; y += 80) {
+  const s = (y / 80) % 2 ? -1 : 1;
+  d += ` C ${50 + 30 * s} ${y + 22}, ${50 + 30 * s} ${y + 58}, 50 ${y + 80}`;
+}
+---
+
+<section class="journey" id="journey" aria-labelledby="journey-title">
+  <header class="wrap journey__head" data-reveal>
+    <p class="kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-cal"></use></svg> diary_2021.txt</p>
+    <h2 class="title-xl" id="journey-title">ปีแรกของ <span class="hl">พีชชี่<Scribble /></span></h2>
+    <p class="lead">จาก "I am Peachi!" คลิปแรก จนถึงคลิปสุดท้ายก่อนหายไป — 12 หน้าจากสมุดของลูกพีชน้อย</p>
+  </header>
+
+  <div class="journey__book wrap">
+    <div class="journey__year" aria-hidden="true" data-parallax="-0.25">2021</div>
+    <svg class="journey__path" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+      <path class="journey__ghost" d={d}></path>
+      <path class="journey__vine" d={d}></path>
+    </svg>
+    <ol class="journey__list">
+      {journey.map((j, i) => {
+        const v = video(j.id);
+        const side = i % 2 ? 'r' : 'l';
+        const rot = [-4, 3, -2, 5, -3, 2][i % 6];
+        return (
+          <li class="entry" data-side={side} style={`--rot:${rot}deg`}>
+            <span class="entry__dot" aria-hidden="true"><svg><use href="#i-blossom" /></svg></span>
+            <button class="polaroid entry__card" type="button" data-video={j.id} aria-label={`เล่นคลิป ${v.title}`}>
+              <span class={tapes[i % tapes.length]} aria-hidden="true" />
+              <span class="polaroid__img">
+                <img src={thumb(j.id, 'mq')} srcset={`${thumb(j.id, 'mq')} 320w, ${thumb(j.id, 'sd')} 640w, ${thumb(j.id, 'maxres')} 1280w`} sizes="(max-width: 900px) 78vw, 380px" alt="" width="320" height="180" loading="lazy" decoding="async" />
+                <span class="stamp">{filmStamp(j.date)}</span>
+                <span class="entry__play" aria-hidden="true"><svg><use href="#i-play" /></svg></span>
+              </span>
+              <span class="polaroid__cap">{j.title}</span>
+            </button>
+            <div class="entry__note">
+              <time datetime={j.date}>{thaiDate(j.date)}</time>
+              <p>{j.note}</p>
+              <p class="entry__views"><svg aria-hidden="true"><use href="#i-eye" /></svg> {compact(v.views)} วิว</p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+    <p class="journey__end hand" data-reveal>…แล้วพีชชี่ก็หายไป <svg aria-hidden="true"><use href="#i-snow"></use></svg></p>
+  </div>
+</section>
+
+<style>
+  .journey { padding: clamp(80px, 10vw, 140px) 0 clamp(100px, 12vw, 160px); overflow: clip; }
+  .journey__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(40px, 7vw, 90px); }
+  .journey__book { position: relative; }
+  .journey__year {
+    position: absolute; left: 50%; top: 6%; translate: -50% 0; z-index: 0;
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(8rem, 26vw, 22rem); line-height: 1;
+    color: transparent; -webkit-text-stroke: 3px rgba(245, 105, 192, 0.2);
+    pointer-events: none; user-select: none;
+  }
+  .journey__path { position: absolute; left: 50%; top: 0; width: 120px; height: 100%; translate: -50% 0; overflow: visible; }
+  .journey__path path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .journey__ghost { stroke: var(--pink-100); stroke-width: 10; }
+  .journey__vine { stroke: var(--pink-300); stroke-width: 5; stroke-dasharray: 1 12; }
+  :global(.js) .journey__vine { stroke-dasharray: none; }
+
+  .journey__list { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(28px, 5vw, 64px); }
+  .entry { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(40px, 8vw, 120px); }
+  .entry__dot {
+    position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2;
+    width: 40px; height: 40px; display: grid; place-items: center;
+    background: #fff; border-radius: 50%; box-shadow: 0 0 0 3px var(--pink-200), 0 6px 14px -6px rgba(201, 45, 130, 0.6);
+  }
+  .entry__dot svg { width: 26px; height: 26px; color: var(--pink-300); }
+  .entry__card {
+    width: min(380px, 100%); border: 0; text-align: left; cursor: pointer;
+    rotate: var(--rot); transition: rotate 0.4s var(--ease-pop), transform 0.4s var(--ease-pop), box-shadow 0.3s;
+  }
+  .entry__card:hover { rotate: 0deg; transform: translateY(-6px) scale(1.03); box-shadow: 0 30px 50px -24px rgba(201, 45, 130, 0.55); }
+  .entry[data-side='l'] .entry__card { justify-self: end; grid-column: 1; }
+  .entry[data-side='l'] .entry__note { grid-column: 2; grid-row: 1; }
+  .entry[data-side='r'] .entry__card { grid-column: 2; }
+  .entry[data-side='r'] .entry__note { grid-column: 1; grid-row: 1; justify-self: end; text-align: right; }
+  .entry__card .washi { top: -12px; left: 50%; translate: -50% 0; rotate: -4deg; }
+  .entry__play {
+    position: absolute; inset: 0; margin: auto; width: 54px; height: 54px; display: grid; place-items: center;
+    border-radius: 50%; background: rgba(255, 255, 255, 0.92); color: var(--pink-500);
+    opacity: 0; transform: scale(0.6); transition: all 0.3s var(--ease-pop);
+  }
+  .entry__play svg { width: 24px; height: 24px; margin-left: 3px; }
+  .entry__card:hover .entry__play, .entry__card:focus-visible .entry__play { opacity: 1; transform: scale(1); }
+  .entry__note { max-width: 330px; display: grid; gap: 4px; }
+  .entry__note time { font-family: var(--font-pixel); font-weight: 500; color: var(--pink-500); font-size: 1.05rem; }
+  .entry__note p { color: var(--ink-soft); }
+  .entry__views { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--ink-faint) !important; }
+  .entry[data-side='r'] .entry__views { justify-content: flex-end; }
+  .entry__views svg { width: 16px; height: 16px; }
+  .journey__end { position: relative; z-index: 2; margin: clamp(40px, 6vw, 80px) auto 0; width: max-content; font-size: clamp(1.4rem, 3vw, 2rem); color: var(--ink-soft); display: flex; align-items: center; gap: 10px; background: var(--paper); padding: 4px 16px; border-radius: 12px; }
+  .journey__end svg { width: 28px; height: 28px; color: var(--sky-300); }
+
+  @media (max-width: 900px) {
+    .journey__path { left: 26px; translate: 0 0; width: 40px; }
+    .entry { grid-template-columns: 1fr; gap: 12px; padding-left: 64px; }
+    .entry__dot { left: 26px; top: 24px; translate: -50% 0; width: 34px; height: 34px; }
+    .entry[data-side] .entry__card, .entry[data-side] .entry__note { grid-column: 1; grid-row: auto; justify-self: start; text-align: left; }
+    .entry[data-side='r'] .entry__views { justify-content: flex-start; }
+    .journey__year { top: 1%; }
+  }
+</style>

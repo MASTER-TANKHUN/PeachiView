@@ -1,0 +1,177 @@
+---
+import { Picture } from 'astro:assets';
+import Win from './Win.astro';
+import Scribble from './svg/Scribble.astro';
+import v1bust from '../assets/models/v1-bust.png';
+import v1full from '../assets/models/v1-full.png';
+import v2wave from '../assets/models/v2-wave.png';
+import v2art from '../assets/models/v2-art.png';
+import v3avatar from '../assets/models/v3-avatar.png';
+import { models, video, thumb, thaiDate, videos } from '../data/site';
+
+const img = { 'v1-bust': v1bust, 'v1-full': v1full, 'v2-wave': v2wave, 'v2-art': v2art, 'v3-avatar': v3avatar };
+const tones: Record<string, string> = { v1: '#ffe2f1', v2: '#ffd3e6', v3: '#eee4ff' };
+const counts = Object.fromEntries(['v1', 'v2', 'v3'].map((e) => [e, videos.filter((v) => v.era === e).length]));
+---
+
+<section class="models" id="models" aria-labelledby="models-title">
+  <div class="models__pin">
+    <header class="wrap models__head" data-reveal>
+      <p class="kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-layers"></use></svg> evolution.exe</p>
+      <h2 class="title-xl" id="models-title">ร่างทั้ง <span class="hl">3<Scribble variant={2} /></span> ของพีชชี่</h2>
+      <ol class="evo" aria-hidden="true">
+        {models.map((m) => (
+          <li class="evo__node" data-era={m.era}><span>{m.no}</span></li>
+        ))}
+        <span class="evo__line"><span class="evo__fill"></span></span>
+        <svg class="evo__peach"><use href="#i-peach" /></svg>
+      </ol>
+    </header>
+
+    <div class="models__track">
+      {models.map((m, i) => {
+        const first = video(m.first);
+        return (
+          <article class="model" data-era={m.era} style={`--tone:${tones[m.era]}`} aria-labelledby={`model-${m.era}`}>
+            <div class="model__num" aria-hidden="true">{m.no}</div>
+            <div class="model__stage">
+              <div class="model__spot" aria-hidden="true" />
+              <div class="model__sparkles" aria-hidden="true">
+                <svg><use href="#i-spark" /></svg><svg><use href="#i-spark" /></svg><svg><use href="#i-spark" /></svg>
+              </div>
+              {m.extra && (
+                <Picture class="model__extra" src={img[m.extra]} alt={m.extraAlt ?? ''} widths={[240, 420]} sizes="(max-width: 900px) 34vw, 16vw" formats={['avif', 'webp']} fallbackFormat="webp" loading="lazy" />
+              )}
+              <Picture
+                class:list={['model__img', m.era === 'v3' && 'diecut']}
+                src={img[m.img]}
+                alt={m.alt}
+                widths={[420, 640, 900]}
+                sizes="(max-width: 900px) 80vw, 38vw"
+                formats={['avif', 'webp']} fallbackFormat="webp"
+                loading="lazy"
+              />
+            </div>
+            <div class="model__info">
+              <Win title={`model_${m.era}.vrm`} icon="layers" dots>
+                <p class="model__period">
+                  <svg width="14" height="14" aria-hidden="true"><use href="#i-cal" /></svg> {m.period} · {counts[m.era]} คลิป
+                </p>
+                <h3 class="model__name" id={`model-${m.era}`}>
+                  {m.name} <small>{m.nick}</small>
+                </h3>
+                <p class="model__note">{m.note}</p>
+                <ul class="model__traits">
+                  {m.traits.map((t) => <li>{t}</li>)}
+                </ul>
+                <div class="model__palette" aria-label="โทนสีของโมเดล">
+                  {m.palette.map((c) => <span style={`--c:${c}`} title={c} />)}
+                </div>
+                <button class="model__first" type="button" data-video={first.id} aria-label={`เล่นคลิปแรกของร่างนี้: ${first.title}`}>
+                  <span class="model__thumb">
+                    <img src={thumb(first.id, 'mq')} srcset={`${thumb(first.id, 'mq')} 320w, ${thumb(first.id, 'sd')} 640w`} sizes="160px" alt="" width="320" height="180" loading="lazy" />
+                    <span class="stamp">{thaiDate(first.date)}</span>
+                  </span>
+                  <span class="model__first-txt">
+                    <small>{i === 2 ? 'เปิดตัวในคลิป' : 'ใช้ครั้งแรกในคลิป'}</small>
+                    <b>{first.title}</b>
+                  </span>
+                  <svg class="model__play" aria-hidden="true"><use href="#i-play" /></svg>
+                </button>
+              </Win>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .models { position: relative; padding: clamp(60px, 8vw, 100px) 0 clamp(40px, 6vw, 80px); background: linear-gradient(180deg, transparent, #fff0f8 12%, #fff0f8 88%, transparent); }
+  .models__pin { position: relative; }
+  .models__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(20px, 3vw, 36px); }
+  .evo { position: relative; display: flex; justify-content: space-between; width: min(360px, 80vw); margin: 10px 0 0; padding: 0; list-style: none; }
+  .evo__node {
+    position: relative; z-index: 1; width: 40px; height: 40px; display: grid; place-items: center;
+    border-radius: 12px; background: #fff; border: 2.5px solid var(--pink-200);
+    font-family: var(--font-pixel); font-weight: 700; color: var(--ink-faint);
+    transition: all 0.4s var(--ease-pop);
+  }
+  .evo__node.is-on { background: var(--pink-400); color: #fff; border-color: #fff; box-shadow: 0 0 0 2.5px var(--pink-400); transform: scale(1.12) rotate(-6deg); }
+  .evo__line { position: absolute; left: 20px; right: 20px; top: 50%; height: 6px; translate: 0 -50%; background: repeating-linear-gradient(90deg, var(--pink-200) 0 8px, transparent 8px 14px); border-radius: 4px; }
+  .evo__fill { position: absolute; inset: 0; background: var(--pink-400); border-radius: 4px; transform-origin: 0 50%; transform: scaleX(0); }
+  .evo__peach { position: absolute; left: 0; top: -30px; width: 28px; height: 28px; translate: 6px 0; }
+
+  .models__track { display: flex; flex-direction: column; gap: clamp(40px, 8vw, 90px); }
+  .model {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center; gap: clamp(20px, 4vw, 60px);
+    width: min(100% - 2 * var(--gutter), var(--maxw)); margin-inline: auto;
+  }
+  .model__num {
+    position: absolute; left: -1%; top: -6%; z-index: 0;
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(7rem, 22vw, 20rem); line-height: 0.8;
+    color: transparent; -webkit-text-stroke: 3px var(--pink-200);
+    pointer-events: none; user-select: none;
+  }
+  .model__stage { position: relative; height: clamp(360px, 62vh, 640px); display: grid; place-items: end center; }
+  .model__spot {
+    position: absolute; left: 50%; bottom: 4%; width: 86%; aspect-ratio: 1; translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 45%, #fff 0 30%, var(--tone) 62%, transparent 71%);
+  }
+  .model__spot::after { content: ''; position: absolute; inset: 7%; border-radius: 50%; border: 3px dotted rgba(245, 105, 192, 0.35); }
+  .model__stage :global(.model__img) {
+    position: relative; z-index: 1; height: 96%; width: auto; max-width: 100%; object-fit: contain;
+    filter: drop-shadow(0 22px 26px rgba(201, 45, 130, 0.28));
+  }
+  .model__stage :global(.model__img.diecut) { filter: url(#diecut); }
+  .model__stage :global(.model__extra) {
+    position: absolute; z-index: 2; right: 0; bottom: 0; height: 52%; width: auto;
+    filter: drop-shadow(0 12px 16px rgba(74, 31, 46, 0.25));
+    rotate: 6deg;
+  }
+  .model__sparkles svg { position: absolute; width: 28px; height: 28px; color: var(--pink-300); z-index: 2; }
+  .model__sparkles svg:nth-child(1) { left: 12%; top: 18%; }
+  .model__sparkles svg:nth-child(2) { right: 16%; top: 8%; width: 20px; color: var(--lilac-400); }
+  .model__sparkles svg:nth-child(3) { left: 22%; bottom: 20%; width: 16px; color: #ffc94d; }
+
+  .model__info { position: relative; z-index: 2; }
+  .model__period { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--ink-faint); }
+  .model__name { font-family: var(--font-pixel); font-size: clamp(1.8rem, 3.2vw, 2.6rem); color: var(--pink-500); margin: 4px 0 6px; line-height: 1.05; }
+  .model__name small { display: block; font-family: var(--font-display); font-size: 0.5em; color: var(--ink); margin-top: 4px; }
+  .model__note { color: var(--ink-soft); margin-bottom: 12px; }
+  .model__traits { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 14px; }
+  .model__traits li { padding: 3px 12px; border-radius: 99px; background: var(--pink-50); border: 1.5px solid var(--pink-200); font-size: 0.85rem; }
+  .model__palette { display: flex; gap: 6px; margin-bottom: 16px; }
+  .model__palette span { width: 28px; height: 28px; border-radius: 8px; background: var(--c); border: 2.5px solid #fff; box-shadow: 0 0 0 1.5px var(--pink-200); }
+  .model__first {
+    display: grid; grid-template-columns: 132px 1fr auto; align-items: center; gap: 12px; width: 100%;
+    padding: 8px; border-radius: 14px; border: 2px dashed var(--pink-200); background: #fff; text-align: left;
+    transition: border-color 0.2s, transform 0.3s var(--ease-pop);
+  }
+  .model__first:hover { border-color: var(--pink-400); transform: rotate(-1deg) scale(1.02); }
+  .model__thumb { position: relative; display: block; border-radius: 8px; overflow: hidden; aspect-ratio: 16/9; }
+  .model__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .model__thumb .stamp { font-size: 0.62rem; right: 5px; bottom: 3px; }
+  .model__first-txt { display: grid; line-height: 1.35; font-size: 0.9rem; }
+  .model__first-txt small { color: var(--ink-faint); font-size: 0.75rem; }
+  .model__first-txt b { font-weight: 400; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .model__play { width: 34px; height: 34px; padding: 8px; border-radius: 50%; background: var(--pink-400); color: #fff; }
+
+  /* desktop: pinned horizontal gallery (enabled by JS with .is-horizontal) */
+  @media (min-width: 901px) {
+    :global(.models.is-horizontal) { padding-bottom: 0; }
+    :global(.models.is-horizontal) .models__pin { height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+    :global(.models.is-horizontal) .models__head { margin-bottom: 0; padding-top: 10px; }
+    :global(.models.is-horizontal) .models__track { flex-direction: row; gap: 0; width: max-content; }
+    :global(.models.is-horizontal) .model { width: 100vw; margin: 0; padding: 0 max(var(--gutter), calc((100vw - var(--maxw)) / 2)); }
+    :global(.models.is-horizontal) .model__stage { height: min(60vh, 600px); }
+  }
+  @media (max-width: 900px) {
+    .model { grid-template-columns: 1fr; }
+    .model__stage { height: clamp(320px, 56vh, 480px); }
+    .model__num { top: -2%; }
+  }
+</style>

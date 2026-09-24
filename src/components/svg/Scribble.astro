@@ -1,0 +1,11 @@
+---
+/** Hand-drawn underline; drawn in with DrawSVG when [data-scribble] enters the viewport. */
+interface Props { color?: string; variant?: 1 | 2 }
+const { color = 'var(--pink-300)', variant = 1 } = Astro.props;
+const d = variant === 1
+  ? 'M4 22c40-10 90-14 150-12s120 6 160-2c-60 4-150 6-220 14'
+  : 'M6 16c30 8 60-10 92-2s58 12 90 0 64-10 96 2';
+---
+<svg class="scribble" viewBox="0 0 320 32" preserveAspectRatio="none" aria-hidden="true">
+  <path data-scribble d={d} fill="none" stroke={color} stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>

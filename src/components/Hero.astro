@@ -1,0 +1,344 @@
+---
+import Win from './Win.astro';
+import PixelHeart from './svg/PixelHeart.astro';
+import Cloud from './svg/Cloud.astro';
+import PeachMascot from './svg/PeachMascot.astro';
+import Scribble from './svg/Scribble.astro';
+import { daysWaited, stats, thumb, video, thaiDate, SUBSCRIBE_URL } from '../data/site';
+
+const word = 'Peachiview';
+// left → right colour ramp like the banner logo (hot pink → lilac → periwinkle)
+const ramp = ['#ff3fa4', '#a9b3ff'];
+const mix = (a: string, b: string, t: number) => {
+  const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [A, B] = [p(a), p(b)];
+  return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(' ')})`;
+};
+const letters = [...word].map((ch, i) => ({ ch, c: mix(ramp[0], ramp[1], i / (word.length - 1)) }));
+const comeback = video('gp5nmWYqZeg');
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__sky" aria-hidden="true">
+    <div class="hero__holo"></div>
+    <div class="hero__stripes"></div>
+    <div class="hero__deco" data-depth="0.25">
+      <div class="deco-win deco-win--a"><span></span></div>
+      <div class="deco-win deco-win--b"><span></span></div>
+      <div class="deco-win deco-win--c"><span></span></div>
+    </div>
+    <div class="hero__hearts" data-depth="0.5">
+      <PixelHeart class="h h1" /><PixelHeart class="h h2" /><PixelHeart class="h h3" /><PixelHeart class="h h4" /><PixelHeart class="h h5" />
+    </div>
+  </div>
+  <canvas class="hero__petals" aria-hidden="true"></canvas>
+
+  <div class="hero__grid wrap">
+    <div class="hero__copy">
+      <p class="kicker hero__status"><span class="live-dot"></span> ONLINE · กลับมาแล้ว!</p>
+      <h1 class="logo" id="hero-title">
+        <span class="sr-only">PeachiView — ยินดีต้อนรับกลับมานะ พีชชี่</span>
+        <span class="logo__word" aria-hidden="true">
+          {letters.map((l, i) => (
+            <span class="logo__ch" data-ch={l.ch} style={`--c:${l.c};--i:${i}`}><span class="logo__fill">{l.ch}</span></span>
+          ))}
+        </span>
+      </h1>
+      <p class="hero__welcome hand" aria-hidden="true">
+        <span class="hl">ยินดีต้อนรับกลับมานะ<Scribble variant={2} color="var(--pink-300)" /></span> พีชชี่ ♡
+      </p>
+      <p class="hero__lead">
+        VTuber สาวจากประเทศไทยที่หายไป <b>{daysWaited.toLocaleString('en-US')} วัน</b> แล้วกลับมาพร้อมโลกใบใหม่ของ
+        <span class="nowrap">3D • Animation • Characters • Stories</span>
+      </p>
+      <div class="hero__cta">
+        <a class="btn" href="#comeback" data-magnetic>
+          <svg aria-hidden="true"><use href="#i-play"></use></svg> ดูคลิปคัมแบ็ก
+        </a>
+        <a class="btn btn--ghost" href={SUBSCRIBE_URL} target="_blank" rel="noopener" data-magnetic>
+          <svg aria-hidden="true" style="color:#ff3b5c"><use href="#i-youtube"></use></svg> ไปกดติดตาม
+        </a>
+      </div>
+      <ul class="hero__chips" aria-label="สถิติช่อง">
+        <li class="chip"><svg width="16" height="16" aria-hidden="true" style="color:var(--pink-400)"><use href="#i-heart"></use></svg> {stats.subscribersLabel} ผู้ติดตาม</li>
+        <li class="chip"><svg width="16" height="16" aria-hidden="true"><use href="#i-film"></use></svg> {stats.videos} คลิป</li>
+        <li class="chip"><svg width="16" height="16" aria-hidden="true"><use href="#i-eye"></use></svg> 2.04M วิว</li>
+      </ul>
+    </div>
+
+    <div class="hero__art">
+      <div class="hero__halo" aria-hidden="true"></div>
+      <figure class="portrait" data-portrait>
+        <img
+          class="portrait__final"
+          src="/portrait/color.webp"
+          width="1098"
+          height="1200"
+          alt="ภาพพีชชี่ร่างใหม่ปี 2026: ผมยาวไล่สีน้ำตาลเป็นชมพู ใส่หูฟังหูแมวสีชมพู โชคเกอร์หัวใจ และเสื้อลายลูกพีช"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <canvas class="portrait__canvas" aria-hidden="true"></canvas>
+        <div class="portrait__sheen" aria-hidden="true"></div>
+        <button class="portrait__replay" type="button" aria-label="ให้วาดรูปพีชชี่ใหม่อีกครั้ง">
+          <svg aria-hidden="true"><use href="#i-spark"></use></svg> วาดใหม่
+        </button>
+      </figure>
+      <p class="bubble hand" aria-hidden="true"><span class="bubble__text">ยังคิดถึงกันมั้ยคะ?</span></p>
+
+      <Win title="now_playing.mp4" icon="film" class="float-win float-win--video" data-float>
+        <button class="np" type="button" data-video={comeback.id} aria-label={`เล่นคลิป ${comeback.title}`}>
+          <span class="np__thumb">
+            <img src={thumb(comeback.id, 'mq')} srcset={`${thumb(comeback.id, 'mq')} 320w, ${thumb(comeback.id, 'sd')} 640w`} sizes="220px" alt="" width="320" height="180" loading="lazy" />
+            <span class="np__play"><svg aria-hidden="true"><use href="#i-play"></use></svg></span>
+          </span>
+          <span class="np__meta"><b>{comeback.title}</b><small>{thaiDate(comeback.date)} · คลิปคัมแบ็ก</small></span>
+        </button>
+      </Win>
+      <Win title="status.txt" icon="heart" class="float-win float-win--status" data-float>
+        <p class="status"><span class="live-dot"></span> กลับมาแล้ว</p>
+        <p class="status__big">{stats.subscribersLabel}</p>
+        <p class="status__small">ลูกพีชน้อยที่รออยู่</p>
+      </Win>
+      <div class="hero__mascot" data-float>
+        <PeachMascot id="hm" label="ลูกพีชน้อย มาสคอตของพีชชี่" class="mascot-click" />
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__clouds" aria-hidden="true">
+    <Cloud id="c1" class="cl cl--1" />
+    <Cloud id="c2" class="cl cl--2" tint="#f6dcf6" />
+    <Cloud id="c3" class="cl cl--3" />
+    <Cloud id="c4" class="cl cl--4" tint="#f3e2ff" />
+  </div>
+
+  <a class="hero__scroll" href="#about" aria-label="เลื่อนลงไปรู้จักพีชชี่">
+    <span class="hero__scroll-peach"><svg aria-hidden="true"><use href="#i-peach"></use></svg></span>
+    <span class="hand">เลื่อนลงไปดูกัน</span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    padding: clamp(84px, 11vh, 120px) 0 clamp(120px, 16vh, 180px);
+    overflow: clip;
+    isolation: isolate;
+  }
+  .hero__sky { position: absolute; inset: 0; z-index: -2; }
+  .hero__holo {
+    position: absolute; inset: -20%;
+    background:
+      radial-gradient(38% 42% at 18% 26%, rgba(255, 196, 229, 0.95), transparent 70%),
+      radial-gradient(34% 40% at 80% 18%, rgba(214, 200, 255, 0.9), transparent 70%),
+      radial-gradient(40% 44% at 62% 72%, rgba(196, 222, 255, 0.85), transparent 72%),
+      radial-gradient(30% 34% at 30% 80%, rgba(255, 214, 236, 0.9), transparent 70%),
+      conic-gradient(from 210deg at 55% 45%, #ffe4f3, #eadcff, #d9ecff, #ffe1f1, #f4d9ff, #ffe4f3);
+    filter: saturate(1.05);
+    animation: holo-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes holo-drift {
+    0% { transform: translate3d(-2%, -1%, 0) rotate(0deg) scale(1); }
+    100% { transform: translate3d(2%, 2%, 0) rotate(8deg) scale(1.06); }
+  }
+  .hero__stripes {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(125deg, rgba(255, 255, 255, 0.28) 0 1.5px, transparent 1.5px 10px);
+    mask-image: linear-gradient(180deg, #000 30%, transparent 95%);
+  }
+  .hero__deco, .hero__hearts { position: absolute; inset: 0; }
+  .deco-win {
+    position: absolute;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 214, 236, 0.6));
+    border: 2px solid rgba(250, 147, 210, 0.7);
+    box-shadow: 0 10px 30px -18px rgba(201, 45, 130, 0.6);
+  }
+  .deco-win::before {
+    content: '';
+    position: absolute; left: 0; right: 0; top: 0; height: 22px;
+    background: linear-gradient(180deg, #ffc9e8, #f9a3d6);
+    border-bottom: 2px solid rgba(250, 147, 210, 0.9);
+    border-radius: 8px 8px 0 0;
+  }
+  .deco-win span {
+    position: absolute; inset: 24px 0 0;
+    background-image: radial-gradient(rgba(245, 105, 192, 0.55) 1.4px, transparent 1.6px);
+    background-size: 9px 9px;
+    mask-image: linear-gradient(90deg, #000, transparent 75%);
+    border-radius: 0 0 8px 8px;
+  }
+  .deco-win--a { width: 300px; height: 120px; left: -60px; top: 58%; transform: rotate(-4deg); }
+  .deco-win--b { width: 240px; height: 110px; right: 4%; top: 8%; transform: rotate(3deg); opacity: 0.8; }
+  .deco-win--c { width: 180px; height: 90px; left: 38%; top: 4%; opacity: 0.55; transform: rotate(-2deg); }
+  .hero__hearts :global(.h) { position: absolute; width: 34px; filter: drop-shadow(0 6px 8px rgba(245, 105, 192, 0.35)); }
+  .hero__hearts :global(.h1) { left: 6%; top: 20%; width: 44px; }
+  .hero__hearts :global(.h2) { left: 44%; top: 14%; width: 26px; }
+  .hero__hearts :global(.h3) { right: 8%; top: 46%; width: 38px; }
+  .hero__hearts :global(.h4) { left: 30%; bottom: 22%; width: 22px; }
+  .hero__hearts :global(.h5) { right: 36%; bottom: 14%; width: 30px; }
+  .hero__petals { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+
+  .hero__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(16px, 3vw, 48px);
+    min-height: calc(100svh - 240px);
+  }
+  .hero__copy { position: relative; z-index: 4; display: grid; justify-items: start; gap: clamp(14px, 2vh, 22px); }
+  .live-dot {
+    width: 9px; height: 9px; border-radius: 50%; background: #3ad07a; display: inline-block;
+    box-shadow: 0 0 0 0 rgba(58, 208, 122, 0.6); animation: live 1.8s infinite;
+  }
+  @keyframes live { 70% { box-shadow: 0 0 0 9px rgba(58, 208, 122, 0); } 100% { box-shadow: 0 0 0 0 rgba(58, 208, 122, 0); } }
+
+  /* banner-style logo: pixel font, gradient fill, white + pink outlines */
+  .logo { margin: 0; line-height: 0.9; }
+  .logo__word {
+    display: inline-flex; flex-wrap: nowrap;
+    font-family: var(--font-pixel); font-weight: 700;
+    font-size: clamp(3rem, 8vw, 7.2rem);
+    letter-spacing: -0.02em;
+    font-style: normal;
+    transform: skewX(-8deg);
+    padding: 0.12em 0.14em 0.2em 0.06em;
+  }
+  .logo__ch { position: relative; display: inline-block; isolation: isolate; }
+  .logo__ch::before, .logo__ch::after {
+    content: attr(data-ch);
+    position: absolute; inset: 0; z-index: -1;
+    color: #fff; -webkit-text-stroke: 0.13em #fff;
+  }
+  .logo__ch::after {
+    z-index: -2; color: var(--pink-400); -webkit-text-stroke: 0.22em var(--pink-400);
+    transform: translateY(0.07em);
+    filter: drop-shadow(0 0.08em 0.06em rgba(201, 45, 130, 0.35));
+  }
+  .logo__fill {
+    display: inline-block;
+    color: transparent;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--c) 82%, #fff) 0%, var(--c) 46%, color-mix(in srgb, var(--c) 70%, #7a3cff) 100%);
+    -webkit-background-clip: text; background-clip: text;
+  }
+  .hero__welcome { font-size: clamp(1.5rem, 3vw, 2.3rem); color: var(--ink); line-height: 1.3; }
+  .hero__welcome .hl { position: relative; color: var(--pink-500); white-space: nowrap; }
+  .hero__welcome .hl :global(.scribble) { position: absolute; left: -2%; bottom: -0.3em; width: 104%; height: 0.45em; overflow: visible; }
+  .hero__lead { max-width: 34em; color: var(--ink-soft); font-size: clamp(1rem, 0.6vw + 0.85rem, 1.15rem); }
+  .hero__lead b { color: var(--pink-500); font-weight: 500; }
+  .nowrap { white-space: nowrap; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 14px 16px; padding-top: 6px; }
+  .hero__chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 4px 0 0; }
+
+  .hero__art { position: relative; z-index: 2; height: min(78svh, 760px); min-height: 440px; }
+  .hero__halo {
+    position: absolute; left: 50%; top: 46%; width: 92%; aspect-ratio: 1; translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 38%, rgba(255, 214, 236, 0.55) 55%, transparent 70%);
+  }
+  .hero__halo::after {
+    content: ''; position: absolute; inset: 9%;
+    border-radius: 50%; border: 3px dashed rgba(245, 105, 192, 0.45);
+    animation: spin 40s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .portrait {
+    position: absolute; left: 50%; bottom: -6%; margin: 0;
+    height: 104%; aspect-ratio: 1098 / 1200;
+    translate: -50% 0;
+  }
+  .portrait__final, .portrait__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .portrait__final { object-fit: contain; filter: drop-shadow(0 20px 30px rgba(201, 45, 130, 0.25)); }
+  :global(.js) .portrait__final { opacity: 0; }
+  .portrait__sheen {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(255, 255, 255, 0.55), transparent 35%);
+    mix-blend-mode: soft-light;
+    -webkit-mask: url(/portrait/color.webp) center / contain no-repeat;
+    mask: url(/portrait/color.webp) center / contain no-repeat;
+  }
+  .portrait__replay {
+    position: absolute; right: 6%; bottom: 14%;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 99px;
+    background: rgba(255, 255, 255, 0.9); border: 2px solid var(--pink-200);
+    font-size: 0.8rem; color: var(--ink-soft);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .portrait__replay svg { width: 14px; height: 14px; color: var(--pink-400); }
+  .portrait.is-done .portrait__replay { opacity: 1; pointer-events: auto; }
+
+  .bubble {
+    position: absolute; left: 2%; top: 14%; z-index: 5;
+    padding: 10px 16px 12px;
+    background: #fff; border: 2.5px solid var(--ink); border-radius: 22px 22px 22px 6px;
+    font-size: clamp(1rem, 1.5vw, 1.25rem); color: var(--ink);
+    box-shadow: 4px 5px 0 var(--pink-300);
+    transform-origin: 0% 100%;
+  }
+  :global(.js) .bubble { opacity: 0; }
+
+  :global(.float-win) { position: absolute; z-index: 5; }
+  :global(.float-win--video) { left: -4%; bottom: 8%; width: min(270px, 46%); }
+  :global(.float-win--status) { right: -2%; top: 4%; width: 196px; }
+  :global(.float-win .win__body) { padding: 10px; }
+  .np { display: grid; gap: 8px; width: 100%; padding: 0; border: 0; background: none; text-align: left; }
+  .np__thumb { position: relative; display: block; border-radius: 8px; overflow: hidden; aspect-ratio: 16/9; background: var(--pink-100); }
+  .np__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-out); }
+  .np:hover .np__thumb img { transform: scale(1.06); }
+  .np__play {
+    position: absolute; inset: 0; margin: auto; width: 44px; height: 44px; display: grid; place-items: center;
+    border-radius: 50%; background: rgba(255, 255, 255, 0.92); color: var(--pink-500);
+    box-shadow: 0 6px 16px -6px rgba(201, 45, 130, 0.7);
+  }
+  .np__play svg { width: 20px; height: 20px; margin-left: 3px; }
+  .np__meta { display: grid; line-height: 1.35; }
+  .np__meta b { font-weight: 500; font-size: 0.95rem; }
+  .np__meta small { font-size: 0.75rem; color: var(--ink-faint); }
+  .status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--ink-soft); }
+  .status__big { font-family: var(--font-pixel); font-weight: 700; font-size: 1.9rem; line-height: 1.1; color: var(--pink-500); }
+  .status__small { font-size: 0.78rem; color: var(--ink-faint); }
+  .hero__mascot { position: absolute; right: 2%; bottom: 2%; width: clamp(84px, 9vw, 120px); z-index: 6; cursor: pointer; }
+
+  .hero__clouds { position: absolute; left: 0; right: 0; bottom: -2px; height: 32vh; z-index: 4; pointer-events: none; }
+  .hero__clouds :global(.cl) { position: absolute; bottom: 0; }
+  .hero__clouds :global(.cl--1) { left: -6%; width: 44%; }
+  .hero__clouds :global(.cl--2) { left: 26%; width: 38%; bottom: -18px; }
+  .hero__clouds :global(.cl--3) { right: -8%; width: 46%; }
+  .hero__clouds :global(.cl--4) { left: 58%; width: 26%; bottom: 40px; opacity: 0.8; }
+  .hero__clouds::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40px;
+    background: linear-gradient(180deg, transparent, var(--paper));
+  }
+
+  .hero__scroll {
+    position: absolute; left: 50%; bottom: 22px; z-index: 6; translate: -50% 0;
+    display: grid; justify-items: center; gap: 2px; text-decoration: none; color: var(--ink-soft); font-size: 1rem;
+  }
+  .hero__scroll-peach svg { width: 30px; height: 30px; animation: bounce 1.6s var(--ease-pop) infinite; }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+  @media (max-width: 900px) {
+    .hero { padding-top: 76px; }
+    .hero__grid { grid-template-columns: 1fr; min-height: 0; }
+    .hero__art { order: -1; height: 64svh; min-height: 380px; max-height: 600px; }
+    .hero__copy { justify-items: center; text-align: center; }
+    .hero__cta, .hero__chips { justify-content: center; }
+    .logo__word { font-size: clamp(2.8rem, 14vw, 5rem); }
+    :global(.float-win--video) { left: 0; bottom: 4%; width: min(210px, 50%); }
+    :global(.float-win--status) { right: 0; top: 2%; width: 142px; }
+    .status__big { font-size: 1.5rem; }
+    .bubble { left: 0; top: 26%; }
+    .hero__mascot { right: 0; bottom: 0; width: 76px; }
+    .deco-win--a, .deco-win--c { display: none; }
+    .hero__scroll { display: none; }
+  }
+  @media (max-width: 420px) {
+    :global(.float-win--video) { width: 48%; }
+    .np__meta small { display: none; }
+  }
+</style>

@@ -1,0 +1,6 @@
+# Only needed to regenerate assets (python scripts/*.py), not to build the site.
+pillow
+numpy
+opencv-python-headless
+scikit-image
+rembg[cpu]

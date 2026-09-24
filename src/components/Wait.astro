@@ -1,0 +1,166 @@
+---
+import PeachMascot from './svg/PeachMascot.astro';
+import Win from './Win.astro';
+import { daysWaited, fanMessages, thumb } from '../data/site';
+
+const years = ['2022', '2023', '2024', '2025', '2026'];
+const spots = [
+  [8, 16], [52, 3], [4, 62], [74, 58], [16, 82], [60, 84], [30, 9], [82, 36],
+];
+---
+
+<section class="wait" id="wait" aria-labelledby="wait-title">
+  <div class="wait__pin">
+    <div class="wait__sky" aria-hidden="true">
+      <div class="wait__night"></div>
+      <div class="wait__stars"></div>
+      <div class="wait__moon"></div>
+    </div>
+    <canvas class="wait__snow" aria-hidden="true"></canvas>
+
+    <div class="wait__center">
+      <p class="kicker wait__kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-snow"></use></svg> waiting.exe</p>
+      <h2 class="wait__title" id="wait-title">ระหว่างที่พีชชี่หายไป…</h2>
+      <p class="wait__counter" aria-label={`${daysWaited} วัน`}>
+        <span class="wait__num" data-days={daysWaited}>{daysWaited.toLocaleString('en-US')}</span><span class="wait__unit">วัน</span>
+      </p>
+      <p class="wait__sub">ที่ลูกพีชน้อยนั่งรอ <span class="wait__range">14 ม.ค. 2022 → 12 ก.ย. 2026</span></p>
+    </div>
+
+    <div class="calendar" aria-hidden="true">
+      <div class="calendar__rings"><i></i><i></i><i></i></div>
+      {[...years].reverse().map((y) => (
+        <div class="calendar__page" data-year={y}>
+          <span class="calendar__y">{y}</span>
+          <span class="calendar__m">{y === '2022' ? 'JAN' : y === '2026' ? 'SEP' : '♡'}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="sleeper" aria-hidden="true">
+      <PeachMascot id="wm" mood="sleep" class="sleeper__peach" />
+      <div class="sleeper__pillow"></div>
+    </div>
+
+    <ul class="wait__msgs" aria-label="ข้อความจากลูกพีชน้อยระหว่างรอ">
+      {fanMessages.map((m, i) => (
+        <li class="msg" style={`--x:${spots[i][0]}%;--y:${spots[i][1]}%`}>
+          <span class="msg__av" aria-hidden="true"><svg><use href="#i-peach" /></svg></span>
+          <span class="msg__body"><b>ลูกพีชน้อย</b><span>{m}</span></span>
+        </li>
+      ))}
+    </ul>
+
+    <button class="snowcard polaroid" type="button" data-video="dvLkIPZb-iQ" aria-label="เล่นคลิป Snowman นางหิมะ">
+      <span class="washi washi--sky" aria-hidden="true"></span>
+      <span class="polaroid__img">
+        <img src={thumb('dvLkIPZb-iQ', 'mq')} srcset={`${thumb('dvLkIPZb-iQ', 'mq')} 320w, ${thumb('dvLkIPZb-iQ', 'sd')} 640w`} sizes="220px" alt="" width="320" height="180" loading="lazy" />
+        <span class="snowcard__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      </span>
+      <span class="polaroid__cap">เพลงประจำการรอ: Snowman ❄</span>
+    </button>
+
+    <Win title="new_message.eml" icon="mail" class="wait__alert">
+      <p class="alert__from"><b>PeachiView</b> <span>· โพสต์ในชุมชน</span></p>
+      <p class="alert__text hand">"ยังจำกันได้มั้ยนะ...."</p>
+    </Win>
+  </div>
+</section>
+
+<style>
+  .wait { position: relative; color: #fff; }
+  .wait__pin { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; isolation: isolate; }
+  .wait__sky { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #ffd6ea 0%, #f3c6f0 45%, #d8c2ff 100%); }
+  .wait__night {
+    position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(120% 80% at 50% 110%, #5b4a9e 0%, #2e2863 45%, #1b1840 100%);
+  }
+  .wait__stars {
+    position: absolute; inset: 0; opacity: 0;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 18%, #fff, transparent 60%), radial-gradient(1.2px 1.2px at 28% 42%, #fff, transparent 60%),
+      radial-gradient(2px 2px at 46% 12%, #ffe6f6, transparent 60%), radial-gradient(1.2px 1.2px at 64% 30%, #fff, transparent 60%),
+      radial-gradient(1.8px 1.8px at 82% 16%, #fff, transparent 60%), radial-gradient(1.2px 1.2px at 90% 48%, #dfe8ff, transparent 60%),
+      radial-gradient(1.4px 1.4px at 8% 66%, #fff, transparent 60%), radial-gradient(1.2px 1.2px at 38% 72%, #fff, transparent 60%),
+      radial-gradient(1.6px 1.6px at 72% 76%, #ffe6f6, transparent 60%), radial-gradient(1.1px 1.1px at 56% 58%, #fff, transparent 60%);
+  }
+  .wait__moon {
+    position: absolute; right: 12%; top: 12%; width: clamp(60px, 8vw, 110px); aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fffaf0, #ffe7b8 70%);
+    box-shadow: 0 0 60px 10px rgba(255, 236, 200, 0.35);
+    opacity: 0; transform: translateY(40px);
+  }
+  .wait__snow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+
+  .wait__center { position: relative; z-index: 3; display: grid; justify-items: center; text-align: center; gap: 6px; padding: 0 var(--gutter); }
+  .wait__kicker { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.5); color: #fff; }
+  .wait__title { font-size: clamp(1.6rem, 3.6vw, 2.8rem); line-height: 1.5; padding-top: 0.15em; color: var(--ink); transition: color 0.4s; }
+  .wait.is-night .wait__title { color: #fff; }
+  .wait__counter { display: flex; align-items: baseline; gap: 12px; line-height: 1; margin: 8px 0 4px; }
+  .wait__num {
+    font-family: var(--font-pixel); font-weight: 700; font-size: clamp(5rem, 17vw, 13rem);
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+    color: #fff; text-shadow: 0 6px 0 var(--pink-400), 0 12px 40px rgba(245, 105, 192, 0.6);
+  }
+  .wait__unit { font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.4rem); color: var(--pink-200); }
+  .wait__sub { font-size: clamp(1rem, 1.6vw, 1.3rem); color: var(--ink-soft); display: grid; gap: 2px; }
+  .wait.is-night .wait__sub { color: #f1e6ff; }
+  .wait__range { font-family: var(--font-pixel); font-size: 0.85rem; opacity: 0.85; }
+
+  .calendar { position: absolute; left: clamp(16px, 7vw, 120px); top: 50%; translate: 0 -50%; z-index: 2; width: clamp(110px, 12vw, 170px); aspect-ratio: 4 / 5; perspective: 800px; }
+  .calendar__rings { position: absolute; top: -10px; left: 0; right: 0; z-index: 10; display: flex; justify-content: space-around; }
+  .calendar__rings i { width: 10px; height: 24px; border-radius: 6px; background: #d9cde6; border: 2px solid #fff; }
+  .calendar__page {
+    position: absolute; inset: 0; display: grid; place-content: center; text-align: center;
+    background: #fff; border-radius: 12px; color: var(--ink);
+    border-top: 22px solid var(--pink-400);
+    box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.5);
+    transform-origin: 50% 0;
+    backface-visibility: hidden;
+  }
+  .calendar__y { font-family: var(--font-pixel); font-weight: 700; font-size: clamp(1.8rem, 3.4vw, 2.8rem); line-height: 1; }
+  .calendar__m { font-family: var(--font-pixel); color: var(--pink-500); font-size: 1rem; }
+
+  .sleeper { position: absolute; right: clamp(12px, 8vw, 140px); bottom: clamp(60px, 14vh, 160px); z-index: 2; width: clamp(110px, 13vw, 190px); }
+  .sleeper :global(.sleeper__peach) { position: relative; z-index: 1; }
+  .sleeper__pillow { position: absolute; left: -12%; right: -12%; bottom: -8%; height: 34%; border-radius: 50% 50% 40% 40%; background: linear-gradient(180deg, #fff, #f3e3ff); box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.4); }
+
+  .wait__msgs { position: absolute; inset: 0; z-index: 4; list-style: none; margin: 0; padding: 0; pointer-events: none; }
+  .msg {
+    position: absolute; left: var(--x); top: var(--y);
+    display: flex; align-items: center; gap: 8px; max-width: min(280px, 44vw);
+    padding: 8px 12px 8px 8px; border-radius: 16px;
+    background: rgba(255, 255, 255, 0.94); color: var(--ink);
+    box-shadow: 0 12px 24px -14px rgba(30, 20, 70, 0.6);
+  }
+  :global(.js) .msg { opacity: 0; }
+  .msg__av { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--pink-100); display: grid; place-items: center; }
+  .msg__av svg { width: 24px; height: 24px; }
+  .msg__body { display: grid; line-height: 1.3; font-size: 0.9rem; }
+  .msg__body b { font-weight: 500; font-size: 0.72rem; color: var(--ink-faint); }
+
+  .snowcard { position: absolute; left: 50%; bottom: 3%; z-index: 5; width: 210px; translate: -50% 0; rotate: -3deg; border: 0; cursor: pointer; text-align: left; }
+  :global(.js) .snowcard { opacity: 0; }
+  .snowcard .washi { top: -12px; left: 50%; translate: -50% 0; }
+  .snowcard__eq { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 3px; align-items: end; height: 18px; }
+  .snowcard__eq i { width: 4px; background: #fff; border-radius: 2px; animation: eq 0.9s ease-in-out infinite alternate; }
+  .snowcard__eq i:nth-child(2) { animation-delay: 0.2s; } .snowcard__eq i:nth-child(3) { animation-delay: 0.4s; } .snowcard__eq i:nth-child(4) { animation-delay: 0.1s; }
+  @keyframes eq { from { height: 4px; } to { height: 18px; } }
+  .snowcard .polaroid__cap { color: var(--ink); font-size: 0.95rem; }
+
+  :global(.wait__alert) { position: absolute !important; right: clamp(12px, 6vw, 100px); top: clamp(80px, 14vh, 150px); z-index: 6; width: min(300px, 80vw); color: var(--ink); }
+  :global(.js .wait__alert) { opacity: 0; }
+  .alert__from { font-size: 0.85rem; color: var(--ink-faint); }
+  .alert__from b { color: var(--pink-500); font-weight: 500; }
+  .alert__text { font-size: 1.35rem; color: var(--ink); }
+
+  @media (max-width: 900px) {
+    .calendar { left: 50%; top: auto; bottom: 20%; translate: -50% 0; width: 96px; }
+    .wait__center { margin-top: -26vh; }
+    .sleeper { right: 6%; bottom: 23%; width: 92px; }
+    .msg { max-width: 58vw; font-size: 0.8rem; }
+    .msg:nth-child(n + 6) { display: none; }
+    .snowcard { width: 170px; }
+    :global(.wait__alert) { top: auto; bottom: 30%; right: 50%; translate: 50% 0; }
+  }
+</style>

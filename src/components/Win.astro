@@ -1,0 +1,26 @@
+---
+/** Retro "PeachiOS" window chrome, as seen in PeachiView's banner. */
+interface Props {
+  title: string;
+  icon?: string;
+  class?: string;
+  dots?: boolean;
+  bodyClass?: string;
+  [key: string]: unknown;
+}
+const { title, icon, class: cls, dots = false, bodyClass, ...rest } = Astro.props;
+---
+<div class:list={['win', dots && 'win--dots', cls]} {...rest}>
+  <div class="win__bar">
+    <span class="win__title">
+      {icon && <svg width="16" height="16" aria-hidden="true"><use href={`#i-${icon}`} /></svg>}
+      <span>{title}</span>
+    </span>
+    <span class="win__btns" aria-hidden="true">
+      <span class="win__btn"><svg><use href="#i-min" /></svg></span>
+      <span class="win__btn"><svg><use href="#i-max" /></svg></span>
+      <span class="win__btn"><svg><use href="#i-close" /></svg></span>
+    </span>
+  </div>
+  <div class:list={['win__body', bodyClass]}><slot /></div>
+</div>

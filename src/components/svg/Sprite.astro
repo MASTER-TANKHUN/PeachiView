@@ -1,0 +1,99 @@
+---
+/** One hidden SVG with every icon (as <symbol>) and shared filters. Use: <svg><use href="#i-heart"/></svg> */
+---
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="pch-body" cx="34%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#fff3df"></stop>
+      <stop offset=".3" stop-color="#ffcfae"></stop>
+      <stop offset=".68" stop-color="#ff9db0"></stop>
+      <stop offset="1" stop-color="#f26b96"></stop>
+    </radialGradient>
+    <linearGradient id="pch-leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b6f0a6"></stop>
+      <stop offset="1" stop-color="#3f9e58"></stop>
+    </linearGradient>
+    <!-- white die-cut sticker outline + soft drop shadow for transparent cut-outs -->
+    <filter id="diecut" x="-15%" y="-15%" width="130%" height="135%" color-interpolation-filters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="6" result="grow"></feMorphology>
+      <feFlood flood-color="#ffffff"></feFlood>
+      <feComposite in2="grow" operator="in" result="outline"></feComposite>
+      <feGaussianBlur in="grow" stdDeviation="7" result="blur"></feGaussianBlur>
+      <feOffset in="blur" dy="10" result="off"></feOffset>
+      <feFlood flood-color="#4a1f2e" flood-opacity=".22"></feFlood>
+      <feComposite in2="off" operator="in" result="shadow"></feComposite>
+      <feMerge><feMergeNode in="shadow"></feMergeNode><feMergeNode in="outline"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+    </filter>
+    <!-- "line boil": hand-drawn jitter, the seed is shuffled from JS -->
+    <filter id="boil" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1" result="noise"></feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+    </filter>
+  </defs>
+
+  <!-- window chrome -->
+  <symbol id="i-min" viewBox="0 0 10 10"><path d="M1.5 7.5h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+  <symbol id="i-max" viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"></rect></symbol>
+  <symbol id="i-close" viewBox="0 0 10 10"><path d="M2 2l6 6M8 2L2 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+
+  <!-- ui -->
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" fill="currentColor"></path></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><circle cx="12" cy="12" r="3" fill="currentColor"></circle></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+
+  <!-- doodles -->
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5S3.5 15.3 3.5 9.2A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.5 2.6c0 6.1-8.5 11.3-8.5 11.3Z" fill="currentColor"></path></symbol>
+  <symbol id="i-heart-o" viewBox="0 0 24 24"><path d="M12 20.5S3.5 15.3 3.5 9.2A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.5 2.6c0 6.1-8.5 11.3-8.5 11.3Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 1.5c.7 5.6 3.9 9.8 10.5 10.5-6.6.7-9.8 4.9-10.5 10.5C11.3 16.9 8.1 12.7 1.5 12 8.1 11.3 11.3 7.1 12 1.5Z" fill="currentColor"></path></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.8 2.7 5.8 6.3.8-4.6 4.4 1.2 6.3L12 17l-5.6 3.1 1.2-6.3L3 9.4l6.3-.8Z" fill="currentColor" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-blossom" viewBox="0 0 40 40">
+    <g fill="currentColor">
+      <path d="M20 19C15 14 15 6 20 3c5 3 5 11 0 16Z"></path>
+      <path d="M20 19c-5 3-13 1-15-5 5-4 12-1 15 5Z" transform="rotate(-2 20 20)"></path>
+      <path d="M20 19c7-1 12 5 10 11-6 1-10-4-10-11Z"></path>
+      <path d="M20 19c1 7-5 12-11 10-1-6 4-10 11-10Z"></path>
+      <path d="M20 19c3-5 11-7 15-3-2 6-9 7-15 3Z"></path>
+    </g>
+    <circle cx="20" cy="19" r="3.2" fill="#fff" opacity=".9"></circle>
+    <circle cx="20" cy="19" r="1.6" fill="#e8479f"></circle>
+  </symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4 20C4 10 10 4 20 4c0 10-6 16-16 16Zm0 0 9-9" fill="currentColor" stroke="#3a8f4d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-snow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5"></path><path d="m9.5 4 2.5 2 2.5-2M9.5 20l2.5-2 2.5 2"></path></g></symbol>
+  <symbol id="i-ghost" viewBox="0 0 24 24"><path d="M5 20.5V10a7 7 0 0 1 14 0v10.5l-2.4-1.8-2.3 1.8-2.3-1.8-2.3 1.8-2.3-1.8Z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><circle cx="9.5" cy="10.5" r="1.4" fill="currentColor"></circle><circle cx="14.5" cy="10.5" r="1.4" fill="currentColor"></circle><path d="M10.5 14.2q1.5 1.2 3 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></symbol>
+  <symbol id="i-pad" viewBox="0 0 24 24"><path d="M7.5 7h9A5 5 0 0 1 21 13.8l-.4 2.4a2.9 2.9 0 0 1-5 1.4L14 15.9h-4l-1.6 1.7a2.9 2.9 0 0 1-5-1.4L3 13.8A5 5 0 0 1 7.5 7Z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M7.5 10v3.4M5.8 11.7h3.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><circle cx="15.8" cy="10.6" r="1.1" fill="currentColor"></circle><circle cx="17.8" cy="12.6" r="1.1" fill="currentColor"></circle></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2.8" width="6" height="11" rx="3" fill="#fff" stroke="currentColor" stroke-width="2"></rect><path d="M5.8 11a6.2 6.2 0 0 0 12.4 0M12 17.2v4M8.6 21.2h6.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 2.8 20.5 7.4v9.2L12 21.2l-8.5-4.6V7.4Z" fill="#8bd07e" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M3.5 7.4 12 12l8.5-4.6M12 12v9.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M3.5 7.4 12 2.8l8.5 4.6L12 12Z" fill="#6cc06d"></path></symbol>
+  <symbol id="i-cat" viewBox="0 0 24 24"><path d="M4 21v-9a8 8 0 0 1 16 0v9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path><path d="M5 9 4 2.5 9.5 5.5M19 9l1-6.5-5.5 3" fill="#f7bee4" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><rect x="2.5" y="13" width="4.5" height="7.5" rx="2.2" fill="#fa93d2" stroke="currentColor" stroke-width="2"></rect><rect x="17" y="13" width="4.5" height="7.5" rx="2.2" fill="#fa93d2" stroke="currentColor" stroke-width="2"></rect></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5Z" fill="#ffd66b" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 18V5.5l11-2.5v12.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path><circle cx="6.5" cy="18" r="2.8" fill="currentColor"></circle><circle cx="17.5" cy="15.5" r="2.8" fill="currentColor"></circle></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2.8" y="5" width="18.4" height="14" rx="2.5" fill="#fff" stroke="currentColor" stroke-width="2"></rect><path d="m3.5 6.5 8.5 6.8 8.5-6.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5" fill="#fff" stroke="currentColor" stroke-width="2"></rect><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4" stroke="currentColor" stroke-width="2"></path></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#fff" stroke="currentColor" stroke-width="2"></circle><path d="M4 20.5a8 8 0 0 1 16 0" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 11 12 3.8l8.5 7.2V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1Z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5" fill="#fff" stroke="currentColor" stroke-width="2"></rect><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5Z" fill="#fff" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="m3 13 9 5 9-5M3 17.5l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></symbol>
+  <symbol id="i-peach" viewBox="0 0 24 24">
+    <path d="M12 7.1C10.3 5.1 7.1 4.6 4.9 6.3 2.5 8.2 1.9 12.2 2.9 15.7 4.1 19.9 7.8 22.4 12 22.4s7.9-2.5 9.1-6.7c1-3.5.4-7.5-2-9.4-2.2-1.7-5.4-1.2-7.1.8Z" fill="url(#pch-body)" stroke="#e65a8d" stroke-width="1.15" stroke-linejoin="round"></path>
+    <path d="M12 7.4c-.9 2.3-.9 4.8.5 7.3" fill="none" stroke="#ea6c96" stroke-width=".9" stroke-linecap="round" opacity=".5"></path>
+    <ellipse cx="6.9" cy="9.6" rx="1.9" ry="1.1" transform="rotate(-34 6.9 9.6)" fill="#fff" opacity=".8"></ellipse>
+    <path d="M11.9 6.9C10.6 4.5 7.8 3.2 5.1 3.8c.7 2.4 3.6 3.8 6.8 3.1Zm.3 0c.8-2.8 3.8-4.6 6.8-4.1-.7 2.8-3.6 4.5-6.8 4.1Z" fill="url(#pch-leaf)" stroke="#358a4c" stroke-width=".8" stroke-linejoin="round"></path>
+    <ellipse cx="9" cy="14.6" rx="1.35" ry="1.6" fill="#3a1818"></ellipse>
+    <ellipse cx="15" cy="14.6" rx="1.35" ry="1.6" fill="#3a1818"></ellipse>
+    <circle cx="8.55" cy="13.95" r=".55" fill="#fff"></circle>
+    <circle cx="14.55" cy="13.95" r=".55" fill="#fff"></circle>
+    <ellipse cx="6.4" cy="16.7" rx="1.5" ry=".9" fill="#ff5f98" opacity=".45"></ellipse>
+    <ellipse cx="17.6" cy="16.7" rx="1.5" ry=".9" fill="#ff5f98" opacity=".45"></ellipse>
+    <path d="M10.9 16.5q.55.7 1.1 0q.55.7 1.1 0" fill="none" stroke="#3a1818" stroke-width=".7" stroke-linecap="round"></path>
+  </symbol>
+
+  <!-- socials -->
+  <symbol id="i-youtube" viewBox="0 0 24 24"><path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 4.8 12 4.8 12 4.8s-6 0-7.7.5a2.7 2.7 0 0 0-1.9 1.9C2 8.9 2 12 2 12s0 3.1.4 4.8a2.7 2.7 0 0 0 1.9 1.9c1.7.5 7.7.5 7.7.5s6 0 7.7-.5a2.7 2.7 0 0 0 1.9-1.9c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8Z" fill="currentColor"></path><path d="m10 15.2 5.2-3.2L10 8.8Z" fill="#fff"></path></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.9 3h6.4l4.4 5.8Zm-1.1 16.2h1.7L7.4 4.7H5.6Z" fill="currentColor"></path></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2.2"></rect><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2.2"></circle><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"></circle></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M16.6 2.5c.4 2.8 2 4.6 4.7 4.8v3.3a8 8 0 0 1-4.6-1.5v6.6c0 3.9-2.9 6.8-6.6 6.8a6.6 6.6 0 0 1-6.7-6.6c0-4 3.4-7 7.6-6.4v3.5a3.2 3.2 0 0 0-4 3.1 3.1 3.1 0 0 0 3.2 3.1c1.9 0 3.1-1.3 3.1-3.5V2.5Z" fill="currentColor"></path></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2.2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7 3.6 3.6 0 0 1 .1-2.7s.8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1a3.6 3.6 0 0 1 .1 2.7 3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2.2Z" fill="currentColor"></path></symbol>
+</svg>

@@ -1,0 +1,139 @@
+---
+import { Picture } from 'astro:assets';
+import Scribble from './svg/Scribble.astro';
+import PeachMascot from './svg/PeachMascot.astro';
+import meme from '../assets/posts/meme.jpg';
+import xmas from '../assets/posts/xmas.jpg';
+import newyear from '../assets/posts/newyear.jpg';
+import { letter } from '../data/site';
+
+const memories = [
+  { src: meme, alt: 'มีมพีชชี่ฝีมือ TANKHUNGAMING: พีชชี่ใส่ผมนารูโตะ แว่นดำ ฟันฉลาม และสร้อยทอง', cap: 'มีมที่เคยทำให้เมื่อ 4 ปีก่อน (ขอโทษษ 555)', rot: -5 },
+  { src: xmas, alt: 'ภาพวาดพีชชี่ในชุดชมพูกับเพื่อนสาวผมขาว Merry Christmas', cap: 'Merry Christmas 2021 🎄', rot: 3 },
+  { src: newyear, alt: 'พีชชี่ใส่หมวกปาร์ตี้ในภาพ 2022?!', cap: '2022?! ปีที่เราไม่ได้เจอกัน', rot: -2 },
+];
+---
+
+<section class="letter" id="letter" aria-labelledby="letter-title">
+  <header class="wrap letter__head" data-reveal>
+    <p class="kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-mail"></use></svg> mail.app</p>
+    <h2 class="title-xl" id="letter-title">จดหมายถึง <span class="hl">พีชชี่<Scribble /></span></h2>
+  </header>
+
+  <div class="letter__layout wrap">
+    <div class="letter__stage" data-letter>
+      <div class="env env--back" aria-hidden="true"></div>
+      <article class="paper">
+        <span class="washi washi--peach paper__tape" aria-hidden="true"></span>
+        <div class="paper__peach" aria-hidden="true"><PeachMascot id="lm" /></div>
+        <p class="paper__greet hand">{letter.greeting}</p>
+        {letter.paragraphs.map((p, i) => (
+          <p class:list={['paper__p', i === 0 && 'paper__p--lead']}>{p}</p>
+        ))}
+        <p class="paper__from">{letter.from}</p>
+        <p class="paper__sign hand">{letter.signature}</p>
+      </article>
+      <div class="env env--front" aria-hidden="true"></div>
+      <div class="env env--flap" aria-hidden="true"></div>
+      <button class="seal" type="button" aria-label="เปิดจดหมาย" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-peach"></use></svg>
+      </button>
+    </div>
+
+    <aside class="memories" aria-label="ความทรงจำ">
+      {memories.map((m, i) => (
+        <figure class="memory polaroid" style={`--rot:${m.rot}deg`}>
+          <span class={['washi', 'washi washi--dots', 'washi washi--sky'][i]} aria-hidden="true" />
+          <div class="memory__img">
+            <Picture src={m.src} alt={m.alt} widths={[280, 440]} sizes="(max-width: 900px) 44vw, 240px" formats={['avif', 'webp']} fallbackFormat="webp" loading="lazy" />
+          </div>
+          <figcaption class="polaroid__cap">{m.cap}</figcaption>
+        </figure>
+      ))}
+      <div class="hearts">
+        <button class="btn heart-btn" type="button" data-hearts>
+          <svg aria-hidden="true"><use href="#i-heart"></use></svg> ส่งหัวใจให้พีชชี่
+        </button>
+        <p class="hearts__count hand" aria-live="polite" data-hearts-count></p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .letter { padding: clamp(80px, 10vw, 140px) 0 clamp(100px, 12vw, 160px); overflow: clip; background: linear-gradient(180deg, transparent, #fff0f8 20%, #fff0f8 80%, transparent); }
+  .letter__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(40px, 6vw, 70px); }
+  .letter__layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr); gap: clamp(30px, 5vw, 70px); align-items: start; }
+
+  .letter__stage { position: relative; padding-top: 40px; }
+  .paper {
+    position: relative; z-index: 2;
+    padding: 56px clamp(22px, 5vw, 60px) 50px;
+    background-color: #fffdf8;
+    background-image:
+      linear-gradient(90deg, transparent 0 46px, rgba(245, 105, 192, 0.35) 46px 48px, transparent 48px),
+      repeating-linear-gradient(180deg, transparent 0 35px, rgba(157, 189, 247, 0.4) 35px 36px);
+    background-position: 0 0, 0 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 0 rgba(0,0,0,.04), 0 40px 70px -40px rgba(74, 31, 46, 0.55);
+    rotate: -0.8deg;
+    line-height: 36px;
+    font-family: var(--font-display); font-weight: 500; font-size: clamp(1rem, 0.4vw + 0.92rem, 1.12rem);
+    color: var(--ink);
+  }
+  .paper__tape { top: -12px; left: 50%; translate: -50% 0; rotate: -2deg; width: 120px; }
+  .paper__peach { position: absolute; right: -22px; top: -30px; width: 88px; rotate: 12deg; }
+  .paper__greet { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 72px; color: var(--pink-500); }
+  .paper__p { margin: 0; text-indent: 2.2em; }
+  .paper__p--lead { text-indent: 0; color: var(--pink-500); font-weight: 700; }
+  .paper__from { margin-top: 36px; text-align: right; color: var(--ink-soft); }
+  .paper__sign { text-align: right; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 72px; color: var(--ink); }
+
+  /* envelope (only used when JS runs the opening animation) */
+  .env, .seal { display: none; }
+  :global(.js) .env, :global(.js) .seal { display: block; }
+  .env { position: absolute; left: -3%; right: -3%; top: 40px; height: 300px; pointer-events: none; }
+  .env--back { z-index: 1; background: linear-gradient(180deg, #ffc1df, #f9a5cf); border-radius: 12px; box-shadow: 0 30px 50px -30px rgba(201, 45, 130, 0.7); }
+  .env--front {
+    z-index: 3; border-radius: 0 0 12px 12px;
+    background: linear-gradient(180deg, #ffd3e8, #fbb4d6);
+    clip-path: polygon(0 18%, 50% 62%, 100% 18%, 100% 100%, 0 100%);
+    filter: drop-shadow(0 -2px 0 rgba(201, 45, 130, 0.25));
+  }
+  .env--flap {
+    z-index: 4; height: 180px; transform-origin: 50% 0;
+    background: linear-gradient(180deg, #f9a5cf, #f48cc2);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+  .seal {
+    position: absolute; z-index: 5; left: 50%; top: calc(40px + 150px); width: 76px; height: 76px; translate: -50% -50%;
+    padding: 14px; border: 0; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ff8fbf, #d6337c 70%);
+    box-shadow: inset 0 -4px 8px rgba(0,0,0,.25), inset 0 3px 6px rgba(255,255,255,.4), 0 8px 16px -6px rgba(120, 0, 60, 0.6);
+    pointer-events: none;
+  }
+  .seal svg { width: 100%; height: 100%; filter: saturate(0.3) brightness(1.2); opacity: 0.85; }
+
+  .memories { position: sticky; top: 90px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 18px; }
+  .memory { margin: 0; rotate: var(--rot); transition: rotate 0.35s var(--ease-pop), transform 0.35s var(--ease-pop); }
+  .memory:first-child { grid-column: 1 / -1; width: 78%; justify-self: center; }
+  .memory:hover { rotate: 0deg; transform: scale(1.04); }
+  .memory .washi { top: -12px; left: 50%; translate: -50% 0; rotate: 4deg; }
+  .memory__img { aspect-ratio: 1; overflow: hidden; border-radius: 2px; background: var(--pink-100); }
+  .memory__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .memory .polaroid__cap { font-size: 0.95rem; }
+  .hearts { grid-column: 1 / -1; display: grid; justify-items: center; gap: 10px; margin-top: 10px; }
+  .hearts__count { color: var(--ink-soft); min-height: 1.6em; }
+
+  @media (max-width: 900px) {
+    .letter__layout { grid-template-columns: 1fr; }
+    .memories { position: relative; top: 0; }
+    .paper { line-height: 32px; background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(157, 189, 247, 0.4) 31px 32px); background-position: 0 16px; padding-top: 48px; }
+    .paper__greet, .paper__sign { line-height: 64px; }
+    .paper__from { margin-top: 32px; }
+    .paper__peach { right: -8px; width: 64px; }
+    .env { height: 240px; }
+    .env--flap { height: 140px; }
+    .seal { top: calc(40px + 120px); width: 62px; height: 62px; }
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+/** Global overlay: custom peach cursor + one fixed canvas for trails, heart bursts and peach rain. */
+---
+<canvas class="fx" aria-hidden="true" data-fx></canvas>
+<div class="cursor" aria-hidden="true" data-cursor>
+  <svg class="cursor__peach"><use href="#i-peach"></use></svg>
+  <span class="cursor__label" data-cursor-label></span>
+</div>
+<div class="toast" role="status" aria-live="polite" data-toast></div>
+
+<style>
+  .fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9000; pointer-events: none; }
+  .cursor { position: fixed; left: 0; top: 0; z-index: 9500; pointer-events: none; display: none; }
+  :global(html.has-cursor) .cursor { display: block; }
+  :global(html.has-cursor) body, :global(html.has-cursor) a, :global(html.has-cursor) button { cursor: none; }
+  :global(html.has-cursor) input { cursor: text; }
+  .cursor__peach { width: 30px; height: 30px; translate: -8px -6px; transition: scale 0.25s var(--ease-pop); filter: drop-shadow(0 3px 4px rgba(201, 45, 130, 0.35)); }
+  .cursor.is-hover .cursor__peach { scale: 1.5; }
+  .cursor.is-down .cursor__peach { scale: 0.8; }
+  .cursor__label {
+    position: absolute; left: 22px; top: 22px; white-space: nowrap;
+    padding: 2px 10px; border-radius: 99px; background: var(--ink); color: #fff; font-size: 0.75rem;
+    opacity: 0; transform: scale(0.6); transform-origin: 0 0; transition: all 0.2s var(--ease-pop);
+  }
+  .cursor.has-label .cursor__label { opacity: 1; transform: scale(1); }
+  .toast {
+    position: fixed; left: 50%; top: 20px; z-index: 9600; translate: -50% -160%;
+    padding: 10px 18px; border-radius: 16px; background: #fff; border: 2px solid var(--pink-300);
+    font-family: var(--font-display); font-weight: 700; color: var(--pink-500);
+    box-shadow: 0 16px 30px -14px rgba(201, 45, 130, 0.6);
+    transition: translate 0.5s var(--ease-pop);
+  }
+  .toast.is-on { translate: -50% 0; }
+</style>

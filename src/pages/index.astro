@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import Loader from '../components/Loader.astro';
+import Taskbar from '../components/Taskbar.astro';
+import Fx from '../components/Fx.astro';
+import Player from '../components/Player.astro';
+import MiniPlayer from '../components/MiniPlayer.astro';
+import Radio from '../components/Radio.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import About from '../components/About.astro';
+import Models from '../components/Models.astro';
+import Journey from '../components/Journey.astro';
+import Wait from '../components/Wait.astro';
+import Comeback from '../components/Comeback.astro';
+import Videos from '../components/Videos.astro';
+import Letter from '../components/Letter.astro';
+import Footer from '../components/Footer.astro';
+import { daysWaited } from '../data/site';
+
+const title = 'PeachiView — ยินดีต้อนรับกลับมานะ พีชชี่ 🍑';
+const description = `เว็บแฟนเมดต้อนรับการกลับมาของ PeachiView VTuber สาวจากประเทศไทย หลังหายไป ${daysWaited.toLocaleString('en-US')} วัน — รู้จักพีชชี่ ร่างทั้ง 3 เส้นทางปีแรก และคลิปทั้งหมด`;
+---
+
+<Base title={title} description={description}>
+  <Fragment slot="chrome">
+    <Loader />
+    <Taskbar />
+    <Fx />
+    <Player />
+    <MiniPlayer />
+  </Fragment>
+
+  <Hero />
+  <Marquee />
+  <About />
+  <Models />
+  <Journey />
+  <Wait />
+  <Comeback />
+  <Radio />
+  <Videos />
+  <Letter />
+
+  <Footer slot="footer" />
+</Base>
+
+<script>
+  import '../scripts/app';
+</script>

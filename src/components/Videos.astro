@@ -1,0 +1,129 @@
+---
+import Scribble from './svg/Scribble.astro';
+import { videos, categories, thumb, thaiDate, filmStamp, compact, CHANNEL_URL } from '../data/site';
+
+const PAGE = 12;
+const sorted = [...videos].sort((a, b) => b.date.localeCompare(a.date));
+const count = (key: string) =>
+  key === 'all' || key === 'popular' ? videos.length : videos.filter((v) => v.cats.includes(key as never)).length;
+const badge = (v: (typeof videos)[number]) => (v.kind === 'live' ? 'LIVE' : v.kind === 'short' ? 'SHORTS' : v.length);
+---
+
+<section class="videos" id="videos" aria-labelledby="videos-title">
+  <header class="wrap videos__head" data-reveal>
+    <p class="kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-film"></use></svg> videos/</p>
+    <h2 class="title-xl" id="videos-title">คลังคลิปของ <span class="hl">พีชชี่<Scribble variant={2} /></span></h2>
+    <p class="lead">ครบทั้ง {videos.length} คลิป ตั้งแต่ปี 2021 ถึงคลิปใหม่ล่าสุด — กดที่รูปเพื่อดูได้เลย</p>
+  </header>
+
+  <div class="wrap">
+    <div class="vbar">
+      <div class="vfilters" role="group" aria-label="เลือกหมวดคลิป">
+        {categories.map((c) => (
+          <button class="vchip" type="button" data-filter={c.key} aria-pressed={c.key === 'all' ? 'true' : 'false'}>
+            {c.label} <span class="vchip__n">{count(c.key)}</span>
+          </button>
+        ))}
+      </div>
+      <label class="vsearch">
+        <span class="sr-only">ค้นหาคลิป</span>
+        <svg aria-hidden="true"><use href="#i-eye"></use></svg>
+        <input type="search" placeholder="ค้นหาชื่อคลิป…" autocomplete="off" data-search />
+      </label>
+    </div>
+
+    <p class="vstatus" aria-live="polite" data-status>แสดง {PAGE} จาก {videos.length} คลิป</p>
+    <ul class="vgrid" data-grid>
+      {sorted.slice(0, PAGE).map((v, i) => (
+        <li class="vcard" data-id={v.id} style={`--r:${[-2, 1.5, -1, 2, -1.5, 1][i % 6]}deg`}>
+          <button class="vcard__btn" type="button" data-video={v.id} aria-label={`เล่นคลิป ${v.title}`}>
+            <span class="vcard__img">
+              <img src={thumb(v.id, 'mq')} srcset={`${thumb(v.id, 'mq')} 320w, ${thumb(v.id, 'sd')} 640w`} sizes="(max-width: 600px) 92vw, (max-width: 1100px) 45vw, 300px" alt="" width="320" height="180" loading="lazy" decoding="async" />
+              <span class="vcard__len">{badge(v)}</span>
+              <span class="stamp">{filmStamp(v.date)}</span>
+            </span>
+            <span class="vcard__title">{v.title}</span>
+            <span class="vcard__meta">
+              <span><svg aria-hidden="true"><use href="#i-eye" /></svg> {compact(v.views)}</span>
+              <span>{thaiDate(v.date)}</span>
+              <span class={`era era--${v.era}`}>{v.era}</span>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+    <div class="vmore-wrap">
+      <button class="btn btn--ghost" type="button" data-more>
+        <svg aria-hidden="true"><use href="#i-down"></use></svg> ดูเพิ่มอีก
+      </button>
+      <a class="vchannel" href={CHANNEL_URL} target="_blank" rel="noopener">ไปดูบน YouTube <svg aria-hidden="true"><use href="#i-out"></use></svg></a>
+    </div>
+  </div>
+  <script type="application/json" id="videos-data" set:html={JSON.stringify(videos)} />
+</section>
+
+<style>
+  .videos { padding: clamp(80px, 10vw, 140px) 0 clamp(80px, 10vw, 140px); }
+  .videos__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(30px, 5vw, 56px); }
+  .vbar {
+    position: sticky; top: 12px; z-index: 20;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    padding: 10px; margin-bottom: 14px;
+    background: rgba(255, 246, 251, 0.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 2px solid var(--pink-200); border-radius: 20px;
+  }
+  .vfilters { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+  .vchip {
+    display: inline-flex; align-items: center; gap: 6px; flex: none; white-space: nowrap;
+    padding: 6px 12px; border-radius: 99px; border: 2px solid var(--pink-200); background: #fff;
+    font-size: 0.88rem; font-weight: 400; color: var(--ink-soft);
+    transition: all 0.25s var(--ease-pop);
+  }
+  .vchip:hover { transform: translateY(-2px); border-color: var(--pink-300); }
+  .vchip[aria-pressed='true'] { background: var(--pink-400); border-color: var(--pink-400); color: #fff; transform: rotate(-2deg); }
+  .vchip__n { font-family: var(--font-pixel); font-size: 0.72rem; padding: 0 6px; border-radius: 99px; background: var(--pink-50); color: var(--pink-500); }
+  .vchip[aria-pressed='true'] .vchip__n { background: rgba(255, 255, 255, 0.25); color: #fff; }
+  .vsearch { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px; background: #fff; border: 2px solid var(--pink-200); min-width: min(240px, 100%); }
+  .vsearch svg { width: 18px; height: 18px; color: var(--pink-400); flex: none; }
+  .vsearch input { border: 0; outline: 0; background: none; font: inherit; font-size: 0.92rem; width: 100%; color: var(--ink); }
+  .vstatus { font-size: 0.85rem; color: var(--ink-faint); margin: 6px 4px 18px; }
+
+  .vgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: clamp(18px, 2.4vw, 30px); }
+  .vcard { rotate: var(--r); transition: rotate 0.35s var(--ease-pop); }
+  .vcard:hover { rotate: 0deg; }
+  .vcard__btn {
+    position: relative; width: 100%; height: 100%; display: grid; gap: 8px; align-content: start;
+    padding: 10px 10px 12px; border: 0; border-radius: 6px; background: #fff; text-align: left;
+    box-shadow: var(--shadow-card); transition: transform 0.35s var(--ease-pop), box-shadow 0.3s;
+  }
+  .vcard__btn::before {
+    content: ''; position: absolute; top: -10px; left: 50%; width: 70px; height: 20px; translate: -50% 0; rotate: -3deg;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,.5) 0 5px, transparent 5px 10px), rgba(250, 147, 210, 0.65);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .vcard:nth-child(3n) .vcard__btn::before { background-color: rgba(200, 167, 213, 0.7); }
+  .vcard:nth-child(3n + 1) .vcard__btn::before { background-color: rgba(157, 189, 247, 0.6); }
+  .vcard__btn:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 26px 44px -22px rgba(201, 45, 130, 0.55); }
+  .vcard__btn:hover::before, .vcard__btn:focus-visible::before { opacity: 1; }
+  .vcard__img { position: relative; display: block; aspect-ratio: 16/9; overflow: hidden; border-radius: 3px; background: var(--pink-100); }
+  .vcard__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-out); }
+  .vcard__btn:hover .vcard__img img { transform: scale(1.07); }
+  .vcard__len { position: absolute; right: 6px; top: 6px; background: rgba(74, 31, 46, 0.85); color: #fff; font-family: var(--font-pixel); font-size: 0.72rem; padding: 1px 6px; border-radius: 5px; }
+  .vcard__title { font-weight: 400; line-height: 1.4; font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.8em; }
+  .vcard__meta { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(--ink-faint); }
+  .vcard__meta span:first-child { display: inline-flex; align-items: center; gap: 4px; }
+  .vcard__meta svg { width: 14px; height: 14px; }
+  .era { margin-left: auto; font-family: var(--font-pixel); font-size: 0.7rem; padding: 0 7px; border-radius: 6px; color: #fff; }
+  .era--v1 { background: var(--pink-300); } .era--v2 { background: var(--pink-500); } .era--v3 { background: var(--lilac-400); }
+
+  .vmore-wrap { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 18px 28px; margin-top: clamp(30px, 5vw, 50px); }
+  .vmore-wrap[hidden] { display: none; }
+  .vchannel { display: inline-flex; align-items: center; gap: 6px; color: var(--pink-500); font-weight: 400; }
+  .vchannel svg { width: 16px; height: 16px; }
+  @media (max-width: 700px) {
+    .vbar { position: relative; top: 0; }
+    .vfilters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-inline: -4px; padding-inline: 4px; }
+    .vfilters::-webkit-scrollbar { display: none; }
+    .vsearch { width: 100%; }
+  }
+</style>
