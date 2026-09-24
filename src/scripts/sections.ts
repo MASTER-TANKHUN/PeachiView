@@ -142,11 +142,14 @@ export function initModels() {
     if (desk && !reduce) {
       section.classList.add('is-horizontal');
       const track = $('.models__track', section)!;
+      const pin = $('.models__pin', section)!;
       const dist = () => track.scrollWidth - window.innerWidth;
       const tween = gsap.to(track, {
         x: () => -dist(), ease: 'none',
         scrollTrigger: {
-          trigger: section, pin: '.models__pin', start: 'top top', end: () => `+=${dist()}`, scrub: 0.8,
+          // pin when the one-screen-tall panel itself reaches the top (not the section, whose top
+          // padding would leave the panel's bottom hanging below the screen)
+          trigger: pin, pin, start: 'top top', end: () => `+=${dist()}`, scrub: 0.8,
           invalidateOnRefresh: true, anticipatePin: 1,
           onUpdate: (self) => setActive(self.progress),
         },
