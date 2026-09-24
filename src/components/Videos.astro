@@ -63,7 +63,8 @@ const badge = (v: (typeof videos)[number]) => (v.kind === 'live' ? 'LIVE' : v.ki
 </section>
 
 <style>
-  .videos { padding: clamp(80px, 10vw, 140px) 0 clamp(80px, 10vw, 140px); }
+  /* cards tumble in tilted; clip sideways so a corner never widens the page on phones */
+  .videos { padding: clamp(80px, 10vw, 140px) 0 clamp(80px, 10vw, 140px); overflow-x: clip; }
   .videos__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(30px, 5vw, 56px); }
   .vbar {
     position: sticky; top: 12px; z-index: 20;
@@ -89,12 +90,12 @@ const badge = (v: (typeof videos)[number]) => (v.kind === 'live' ? 'LIVE' : v.ki
   .vstatus { font-size: 0.85rem; color: var(--ink-faint); margin: 6px 4px 18px; }
 
   .vgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: clamp(18px, 2.4vw, 30px); }
-  .vcard { rotate: var(--r); transition: rotate 0.35s var(--ease-pop); }
-  .vcard:hover { rotate: 0deg; }
+  /* GSAP animates the <li>; the tilt lives on the button inside so GSAP never overrides it */
+  .vcard { display: block; }
   .vcard__btn {
     position: relative; width: 100%; height: 100%; display: grid; gap: 8px; align-content: start;
     padding: 10px 10px 12px; border: 0; border-radius: 6px; background: #fff; text-align: left;
-    box-shadow: var(--shadow-card); transition: transform 0.35s var(--ease-pop), box-shadow 0.3s;
+    box-shadow: var(--shadow-card); rotate: var(--r); transition: rotate 0.35s var(--ease-pop), transform 0.35s var(--ease-pop), box-shadow 0.3s;
   }
   .vcard__btn::before {
     content: ''; position: absolute; top: -10px; left: 50%; width: 70px; height: 20px; translate: -50% 0; rotate: -3deg;
@@ -103,7 +104,7 @@ const badge = (v: (typeof videos)[number]) => (v.kind === 'live' ? 'LIVE' : v.ki
   }
   .vcard:nth-child(3n) .vcard__btn::before { background-color: rgba(200, 167, 213, 0.7); }
   .vcard:nth-child(3n + 1) .vcard__btn::before { background-color: rgba(157, 189, 247, 0.6); }
-  .vcard__btn:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 26px 44px -22px rgba(201, 45, 130, 0.55); }
+  .vcard__btn:hover { rotate: 0deg; transform: translateY(-8px) scale(1.02); box-shadow: 0 26px 44px -22px rgba(201, 45, 130, 0.55); }
   .vcard__btn:hover::before, .vcard__btn:focus-visible::before { opacity: 1; }
   .vcard__img { position: relative; display: block; aspect-ratio: 16/9; overflow: hidden; border-radius: 3px; background: var(--pink-100); }
   .vcard__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-out); }

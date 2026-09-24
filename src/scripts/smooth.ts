@@ -4,14 +4,13 @@ import { gsap, ScrollTrigger, reduceMotion } from './core';
 let lenis: Lenis | null = null;
 
 export function initSmooth() {
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if (!reduceMotion) {
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis?.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }
-  // in-page anchors go through Lenis so they glide
+  // the only in-page link left is the keyboard skip link; glide there without touching the URL
   document.addEventListener('click', (e) => {
     const a = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
     if (!a) return;
@@ -20,7 +19,6 @@ export function initSmooth() {
     if (target === null) return;
     e.preventDefault();
     scrollToTarget(target);
-    if (typeof target !== 'number') history.replaceState(null, '', id);
   });
 }
 
@@ -32,6 +30,12 @@ export function scrollToTarget(target: number | HTMLElement) {
   } else {
     target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
   }
+}
+
+/** jump to the very top instantly (also while Lenis is stopped) */
+export function resetScroll() {
+  window.scrollTo(0, 0);
+  lenis?.scrollTo(0, { immediate: true, force: true });
 }
 
 export const stopScroll = () => lenis?.stop();

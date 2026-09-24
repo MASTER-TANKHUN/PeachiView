@@ -167,21 +167,39 @@ function initCursor() {
   document.addEventListener('mouseenter', () => gsap.to(cur, { autoAlpha: 1, duration: 0.2 }));
 }
 
+/** buttons lean towards the cursor; GSAP owns their transform (hover lift & press included) */
 function initMagnetic() {
   if (!finePointer || reduceMotion) return;
   $$('[data-magnetic]').forEach((el) => {
     const xTo = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'elastic.out(1, 0.4)' });
     const yTo = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'elastic.out(1, 0.4)' });
+    el.addEventListener('pointerenter', () => gsap.to(el, { rotation: -1.5, scale: 1.02, duration: 0.3, ease: 'back.out(3)' }));
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
       xTo((e.clientX - (r.left + r.width / 2)) * 0.28);
-      yTo((e.clientY - (r.top + r.height / 2)) * 0.35);
+      yTo((e.clientY - (r.top + r.height / 2)) * 0.35 - 3);
     });
-    el.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
+    el.addEventListener('pointerleave', () => { xTo(0); yTo(0); gsap.to(el, { rotation: 0, scale: 1, duration: 0.4 }); });
+    el.addEventListener('pointerdown', () => gsap.to(el, { scale: 0.95, duration: 0.12 }));
+    el.addEventListener('pointerup', () => gsap.to(el, { scale: 1.02, duration: 0.4, ease: 'elastic.out(1, 0.4)' }));
   });
 }
 
-const peachLines = ['อย่าจิ้มนะ! 🍑', 'ลูกพีชน้อยมาแล้ว~', 'หิวไก่ทอดมายคราฟ…', 'กรี๊ดดด! (เสียงจากเกมผี)', 'คิดถึงทุกคนน้า ♡', 'ขอไอติมอีกลูก 🍦', 'Create • Imagine • Explore!', 'ฮึบ! เด้งๆ'];
+// things Peachi might say when you poke her peach (random, a little silly)
+const peachLines = [
+  'อย่าจิ้มสิ! จั๊กจี้นะ 🍑',
+  'กรี๊ดดด! นึกว่าผีมา 👻',
+  'จิ้มอีกทีจะไปนอนต่ออีก 4 ปีนะ!',
+  'ขอโทษที่หายไปนานน้าาา 🙏',
+  'นี่ลูกพีชนะ ไม่ใช่แอปเปิ้ล!',
+  'เดี๋ยวๆ ยังไม่ได้เปิดกล้องเลย!',
+  'ใครจิ้มบ่อยสุด โดนลากไปเล่นเกมผีด้วยกัน!',
+  'หูฟังหูแมวนี่ของรักของหวงนะ ห้ามแย่ง!',
+  'ร้านไอติมใน Roblox ยังเปิดอยู่มั้ยน้า… 🍦',
+  'เตรียมเสียงกรี๊ดไว้แล้ว พร้อมเล่นเกมผี!',
+  'ลูกพีชน้อยคิดถึงพีชชี่มั้ย? พีชชี่คิดถึงนะ ♡',
+  'บุ๋งๆ เด้งๆ ~ 🍑',
+];
 
 function initEasterEggs() {
   // click any peach mascot → squish + a line

@@ -1,21 +1,31 @@
-/** Taskbar: reveal, active section, Bangkok clock, scroll progress (a peach rides the bar). */
-import { gsap, ScrollTrigger, $, $$, reduceMotion } from './core';
+/**
+ * PeachiOS taskbar: shows which part of the story you're in (it doesn't jump — the page is meant to be
+ * scrolled), a Bangkok clock and a scroll progress bar with a peach riding it.
+ */
+import { gsap, ScrollTrigger, $, $$, reduceMotion, toast, pick } from './core';
 import { scrollToTarget } from './smooth';
 import { burstFrom } from './fx';
 
+const startLines = ['PeachiOS 3.0 ✦ เลื่อนลงไปเรื่อยๆ นะ ♡', 'ยังไม่มีเมนูหรอก เลื่อนดูเองน้า 🍑', 'start แล้ว! ลุยต่อเลย~'];
+
 export function initNav() {
   const bar = $('.taskbar');
-  if (!bar) return;
-  gsap.to(bar, { y: 0, duration: reduceMotion ? 0 : 0.9, ease: 'back.out(1.6)', clearProps: 'transform' });
+  if (bar) gsap.set(bar, { yPercent: 160, autoAlpha: 0 });
 
-  const links = $$<HTMLAnchorElement>('[data-nav]', bar);
-  links.forEach((a) => {
-    const sec = document.getElementById(a.dataset.nav!);
+  const items = $$('[data-nav]', bar ?? document);
+  items.forEach((li) => {
+    const sec = document.getElementById(li.dataset.nav!);
     if (!sec) return;
     ScrollTrigger.create({
       trigger: sec, start: 'top 55%', end: 'bottom 55%',
-      onToggle: (self) => { if (self.isActive) links.forEach((l) => l.classList.toggle('is-active', l === a)); },
+      onToggle: (self) => { if (self.isActive) items.forEach((l) => l.classList.toggle('is-active', l === li)); },
     });
+  });
+
+  const start = $('[data-start]', bar ?? document);
+  start?.addEventListener('click', () => {
+    burstFrom(start, 'heart', 10, 0.6);
+    toast(pick(startLines));
   });
 
   const clock = $('[data-clock]');
@@ -35,10 +45,15 @@ export function initNav() {
     },
   });
 
+  // the footer's "back to top" peach
   const top = $('[data-totop]');
   top?.addEventListener('click', () => {
     burstFrom(top, 'heart', 12, 0.7);
     if (!reduceMotion) gsap.to($('svg', top), { rotation: '-=720', y: -30, duration: 1.2, ease: 'power2.inOut', yoyo: true, repeat: 1 });
     scrollToTarget(0);
   });
+
+  return {
+    reveal: () => { if (bar) gsap.to(bar, { yPercent: 0, autoAlpha: 1, duration: reduceMotion ? 0 : 0.9, ease: 'back.out(1.6)' }); },
+  };
 }

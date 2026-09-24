@@ -48,16 +48,20 @@ const comeback = video('gp5nmWYqZeg');
         <span class="hl">ยินดีต้อนรับกลับมานะ<Scribble variant={2} color="var(--pink-300)" /></span> พีชชี่ ♡
       </p>
       <p class="hero__lead">
-        VTuber สาวจากประเทศไทยที่หายไป <b>{daysWaited.toLocaleString('en-US')} วัน</b> แล้วกลับมาพร้อมโลกใบใหม่ของ
-        <span class="nowrap">3D • Animation • Characters • Stories</span>
+        VTuber สาวชาวไทย สายเกมผี Roblox และ Minecraft หายไป <b>{daysWaited.toLocaleString('en-US')} วัน</b>
+        แล้วก็<span class="nowrap">กลับมาแล้วจริงๆ!</span>
       </p>
       <div class="hero__cta">
-        <a class="btn" href="#comeback" data-magnetic>
-          <svg aria-hidden="true"><use href="#i-play"></use></svg> ดูคลิปคัมแบ็ก
-        </a>
-        <a class="btn btn--ghost" href={SUBSCRIBE_URL} target="_blank" rel="noopener" data-magnetic>
-          <svg aria-hidden="true" style="color:#ff3b5c"><use href="#i-youtube"></use></svg> ไปกดติดตาม
-        </a>
+        <span class="cta-pop">
+          <button class="btn" type="button" data-video={comeback.id} data-magnetic aria-label={`เล่นคลิป ${comeback.title}`}>
+            <svg aria-hidden="true"><use href="#i-play"></use></svg> ดูคลิปคัมแบ็ก
+          </button>
+        </span>
+        <span class="cta-pop">
+          <a class="btn btn--ghost" href={SUBSCRIBE_URL} target="_blank" rel="noopener" data-magnetic>
+            <svg aria-hidden="true" style="color:#ff3b5c"><use href="#i-youtube"></use></svg> ไปกดติดตาม
+          </a>
+        </span>
       </div>
       <ul class="hero__chips" aria-label="สถิติช่อง">
         <li class="chip"><svg width="16" height="16" aria-hidden="true" style="color:var(--pink-400)"><use href="#i-heart"></use></svg> {stats.subscribersLabel} ผู้ติดตาม</li>
@@ -95,13 +99,15 @@ const comeback = video('gp5nmWYqZeg');
           <span class="np__meta"><b>{comeback.title}</b><small>{thaiDate(comeback.date)} · คลิปคัมแบ็ก</small></span>
         </button>
       </Win>
-      <Win title="status.txt" icon="heart" class="float-win float-win--status" data-float>
-        <p class="status"><span class="live-dot"></span> กลับมาแล้ว</p>
-        <p class="status__big">{stats.subscribersLabel}</p>
-        <p class="status__small">ลูกพีชน้อยที่รออยู่</p>
-      </Win>
-      <div class="hero__mascot" data-float>
-        <PeachMascot id="hm" label="ลูกพีชน้อย มาสคอตของพีชชี่" class="mascot-click" />
+      <div class="float-win float-win--status" data-float>
+        <div class="hero__mascot">
+          <PeachMascot id="hm" label="ลูกพีชน้อย มาสคอตของพีชชี่" class="mascot-click" />
+        </div>
+        <Win title="status.txt" icon="heart">
+          <p class="status"><span class="live-dot"></span> กลับมาแล้ว</p>
+          <p class="status__big">{stats.subscribersLabel}</p>
+          <p class="status__small">ลูกพีชน้อยที่รออยู่</p>
+        </Win>
       </div>
     </div>
   </div>
@@ -113,10 +119,10 @@ const comeback = video('gp5nmWYqZeg');
     <Cloud id="c4" class="cl cl--4" tint="#f3e2ff" />
   </div>
 
-  <a class="hero__scroll" href="#about" aria-label="เลื่อนลงไปรู้จักพีชชี่">
-    <span class="hero__scroll-peach"><svg aria-hidden="true"><use href="#i-peach"></use></svg></span>
+  <div class="hero__scroll" aria-hidden="true">
+    <span class="hero__scroll-peach"><svg><use href="#i-peach"></use></svg></span>
     <span class="hand">เลื่อนลงไปดูกัน</span>
-  </a>
+  </div>
 </section>
 
 <style>
@@ -231,7 +237,8 @@ const comeback = video('gp5nmWYqZeg');
   .hero__lead b { color: var(--pink-500); font-weight: 500; }
   .nowrap { white-space: nowrap; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 14px 16px; padding-top: 6px; }
-  .hero__chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 4px 0 0; }
+  .cta-pop { display: inline-flex; }
+  .hero__chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 12px 0 0; }
 
   .hero__art { position: relative; z-index: 2; height: min(78svh, 760px); min-height: 440px; }
   .hero__halo {
@@ -302,7 +309,8 @@ const comeback = video('gp5nmWYqZeg');
   .status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--ink-soft); }
   .status__big { font-family: var(--font-pixel); font-weight: 700; font-size: 1.9rem; line-height: 1.1; color: var(--pink-500); }
   .status__small { font-size: 0.78rem; color: var(--ink-faint); }
-  .hero__mascot { position: absolute; right: 2%; bottom: 2%; width: clamp(84px, 9vw, 120px); z-index: 6; cursor: pointer; }
+  /* the peach sits on top of the status window (and rides along when it's dragged) */
+  .hero__mascot { position: absolute; right: 12px; bottom: calc(100% - 14px); z-index: 2; width: clamp(66px, 5.4vw, 88px); cursor: pointer; }
 
   .hero__clouds { position: absolute; left: 0; right: 0; bottom: -2px; height: 32vh; z-index: 4; pointer-events: none; }
   .hero__clouds :global(.cl) { position: absolute; bottom: 0; }
@@ -333,7 +341,7 @@ const comeback = video('gp5nmWYqZeg');
     :global(.float-win--status) { right: 0; top: 2%; width: 142px; }
     .status__big { font-size: 1.5rem; }
     .bubble { left: 0; top: 26%; }
-    .hero__mascot { right: 0; bottom: 0; width: 76px; }
+    .hero__mascot { right: 6px; bottom: calc(100% - 10px); width: 58px; }
     .deco-win--a, .deco-win--c { display: none; }
     .hero__scroll { display: none; }
   }

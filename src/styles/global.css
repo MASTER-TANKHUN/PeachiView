@@ -115,9 +115,10 @@ p { margin: 0; }
   border-radius: 6px;
 }
 
-::-webkit-scrollbar { width: 12px; }
-::-webkit-scrollbar-track { background: var(--pink-50); }
-::-webkit-scrollbar-thumb { background: var(--pink-300); border: 3px solid var(--pink-50); border-radius: 99px; }
+/* no page scrollbar (it showed as a pale strip over the dark sections) — the pink progress bar
+   with the running peach at the top of the screen shows where you are instead */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
 .sr-only {
   position: absolute !important;
@@ -217,6 +218,12 @@ section { position: relative; }
   will-change: transform;
 }
 .btn:hover { transform: translateY(-3px) rotate(-1.5deg); }
+/* with a mouse, [data-magnetic] buttons are moved by GSAP (fx.ts) — a CSS transition on the same
+   transform would make GSAP read half-finished values, so only the shadow transitions there */
+@media (hover: hover) and (pointer: fine) {
+  [data-magnetic] { transition-property: box-shadow; }
+  [data-magnetic]:hover, [data-magnetic]:active { transform: none; }
+}
 .btn:active { transform: translateY(5px); box-shadow: 0 0 0 2.5px var(--bg), 0 2px 0 0 var(--pink-600), 0 6px 12px -8px rgba(201, 45, 130, 0.55); }
 .btn svg { width: 1.2em; height: 1.2em; flex: none; }
 .btn--ghost {

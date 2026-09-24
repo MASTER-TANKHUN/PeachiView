@@ -1,18 +1,20 @@
 ---
 /**
  * ลูกพีชน้อย — PeachiView's peach plush, redrawn as SVG.
- * mood: happy | sleep | wow  (JS can swap data-mood at runtime)
+ * mood: happy | sleep | wow | joy  (JS can swap data-mood at runtime; joy = ^^ eyes)
  * phones: wears Peachi's pink cat-ear headphones
+ * limbs: little arms & feet (for the dancing peach in the radio section)
  */
 interface Props {
   id: string;
-  mood?: 'happy' | 'sleep' | 'wow';
+  mood?: 'happy' | 'sleep' | 'wow' | 'joy';
   class?: string;
   label?: string;
   idle?: boolean;
   phones?: boolean;
+  limbs?: boolean;
 }
-const { id, mood = 'happy', class: cls = '', label, idle = true, phones = true } = Astro.props;
+const { id, mood = 'happy', class: cls = '', label, idle = true, phones = true, limbs = false } = Astro.props;
 const g = (s: string) => `${id}-${s}`;
 const body = 'M100 54C86 36 57 31 38 46 18 62 14 97 23 128c10 36 42 58 77 58s67-22 77-58c9-31 5-66-15-82-19-15-48-10-62 8Z';
 ---
@@ -56,6 +58,20 @@ const body = 'M100 54C86 36 57 31 38 46 18 62 14 97 23 128c10 36 42 58 77 58s67-
   <ellipse class="peach__shadow" cx="100" cy="194" rx="56" ry="6.5" fill="#4a1f2e" opacity=".14"></ellipse>
   <g class="peach__bob">
     <g class="peach__squish">
+      {limbs && (
+        <g class="peach__limbs">
+          <g class="peach__foot peach__foot--l"><ellipse cx="78" cy="186" rx="15" ry="9" fill="#f77fbf" stroke="#e65a8d" stroke-width="3"></ellipse></g>
+          <g class="peach__foot peach__foot--r"><ellipse cx="122" cy="186" rx="15" ry="9" fill="#f77fbf" stroke="#e65a8d" stroke-width="3"></ellipse></g>
+          <g class="peach__arm peach__arm--l">
+            <path d="M36 146c-11 3-20 10-25 20" fill="none" stroke="#e65a8d" stroke-width="14" stroke-linecap="round"></path>
+            <path d="M36 146c-11 3-20 10-25 20" fill="none" stroke="#ffc0cf" stroke-width="8" stroke-linecap="round"></path>
+          </g>
+          <g class="peach__arm peach__arm--r">
+            <path d="M164 146c11 3 20 10 25 20" fill="none" stroke="#e65a8d" stroke-width="14" stroke-linecap="round"></path>
+            <path d="M164 146c11 3 20 10 25 20" fill="none" stroke="#ffc0cf" stroke-width="8" stroke-linecap="round"></path>
+          </g>
+        </g>
+      )}
       <path class="peach__body" d={body} fill={`url(#${g('body')})`}></path>
       <path d={body} fill={`url(#${g('rim')})`}></path>
       <path d={body} fill="none" stroke="#e65a8d" stroke-width="3.4" stroke-linejoin="round"></path>
@@ -132,7 +148,9 @@ const body = 'M100 54C86 36 57 31 38 46 18 62 14 97 23 128c10 36 42 58 77 58s67-
   .peach .peach__eyes--wow,
   .peach .peach__zzz { display: none; }
   .peach[data-mood='sleep'] .peach__eyes--open,
+  .peach[data-mood='joy'] .peach__eyes--open,
   .peach[data-mood='wow'] .peach__eyes--open { display: none; }
+  .peach[data-mood='joy'] .peach__eyes--sleep,
   .peach[data-mood='sleep'] .peach__eyes--sleep,
   .peach[data-mood='sleep'] .peach__zzz,
   .peach[data-mood='wow'] .peach__eyes--wow { display: inline; }

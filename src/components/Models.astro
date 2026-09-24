@@ -170,6 +170,8 @@ const counts = Object.fromEntries(['v1', 'v2', 'v3'].map((e) => [e, videos.filte
     :global(.models.is-horizontal) .model__stage { height: min(60vh, 600px); }
   }
   @media (max-width: 900px) {
+    /* the extra art slides in from the side — never let it widen the page on phones */
+    .models { overflow-x: clip; }
     .model { grid-template-columns: 1fr; }
     .model__stage { height: clamp(320px, 56vh, 480px); }
     .model__num { top: -2%; }

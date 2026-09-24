@@ -1,5 +1,5 @@
 ---
-/** Floating mini player: shows while you are away from the #radio section so the song can be paused from anywhere. */
+/** Floating mini player: once the song has been started in #radio, it lets you pause/resume from anywhere (it never scrolls). */
 import { song } from '../data/site';
 ---
 <div class="mini" data-mini data-state="idle">
@@ -10,10 +10,10 @@ import { song } from '../data/site';
       <svg class="ic-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4.2" height="14" rx="1.6" fill="currentColor"></rect><rect x="13.8" y="5" width="4.2" height="14" rx="1.6" fill="currentColor"></rect></svg>
     </span>
   </button>
-  <a class="mini__txt" href="#radio" data-mini-jump>
-    <b data-mini-title>เปิดเพลง ♪</b>
+  <span class="mini__txt">
+    <b data-mini-title>กำลังเล่น ♪</b>
     <small>{song.title} · {song.artist}</small>
-  </a>
+  </span>
   <span class="mini__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
   <p class="mini__ticker hand" aria-hidden="true" data-mini-ticker></p>
 </div>

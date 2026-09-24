@@ -8,6 +8,12 @@ import { Flip } from 'gsap/Flip';
 gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin, Draggable, InertiaPlugin, Flip);
 gsap.defaults({ ease: 'power3.out', duration: 0.8 });
 
+// Every visit starts at the top — the story is told by scrolling. ScrollTrigger remembers the
+// scrollRestoration value it saw when it registered ("auto") and writes it back after each refresh,
+// so it has to be told "manual" itself; otherwise a reload lands mid-page before anything is measured.
+ScrollTrigger.clearScrollMemory('manual');
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+
 export { gsap, ScrollTrigger, Draggable, Flip };
 
 export const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

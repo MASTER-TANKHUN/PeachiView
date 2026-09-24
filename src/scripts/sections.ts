@@ -37,8 +37,15 @@ export function initMarquee() {
       });
     },
   });
-  gsap.from('.ribbon--pink', { xPercent: -30, rotation: -8, scrollTrigger: { trigger: '.ribbons', start: 'top bottom', end: 'bottom 60%', scrub: 0.8 } });
-  gsap.from('.ribbon--white', { xPercent: 30, rotation: 8, scrollTrigger: { trigger: '.ribbons', start: 'top bottom', end: 'bottom 60%', scrub: 0.8 } });
+  // the ribbons are tucked under the hero's clouds, so they'd already be "on screen" at load; instead they
+  // start hidden and swing in over the first scroll, settling as they reach ~65% of the screen
+  const box = $('.ribbons')!;
+  const swing = {
+    start: 0, scrub: 0.8, invalidateOnRefresh: true,
+    end: () => Math.max(1, box.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.65),
+  };
+  gsap.from('.ribbon--pink', { autoAlpha: 0, yPercent: 60, xPercent: -30, rotation: -8, ease: 'power2.out', scrollTrigger: swing });
+  gsap.from('.ribbon--white', { autoAlpha: 0, yPercent: 60, xPercent: 30, rotation: 8, ease: 'power2.out', scrollTrigger: swing });
 }
 
 /* ───────── about: tilt/flip card, count-up, draggable stickers ───────── */
@@ -167,18 +174,44 @@ export function initModels() {
   });
 }
 
-/* ───────── journey: the vine draws itself, polaroids flutter onto the page ───────── */
+/* ───────── journey: the vine grows with the scroll, polaroids flutter onto the page ───────── */
+// x of the vine at a given y (viewBox units): the path is 80-unit cubic waves (see Journey.astro)
+function vineX(y: number) {
+  const k = Math.max(0, Math.floor(y / 80));
+  const y0 = k * 80, s = k % 2 ? -1 : 1;
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 18; i++) {
+    const t = (lo + hi) / 2;
+    const yt = y0 + 3 * (1 - t) ** 2 * t * 22 + 3 * (1 - t) * t * t * 58 + t ** 3 * 80;
+    if (yt < y) lo = t; else hi = t;
+  }
+  const t = (lo + hi) / 2;
+  return 50 + 30 * s * 3 * t * (1 - t);
+}
+
 export function initJourney() {
   const book = $('.journey__book');
   if (!book || reduceMotion) return;
-  gsap.fromTo('.journey__vine', { drawSVG: '0%' }, {
-    drawSVG: '100%', ease: 'none',
-    scrollTrigger: { trigger: book, start: 'top 65%', end: 'bottom 75%', scrub: 0.6 },
+  // The vine is stretched to the book's height (non-uniformly), so DrawSVG can't measure it.
+  // A clip that follows the scroll draws it exactly, and a blossom rides the growing tip.
+  const path = $('.journey__path', book)!;
+  const vine = $('.journey__vinesvg', book)!;
+  const tip = $('.journey__tip', book);
+  const moveTip = (p: number) => {
+    if (!tip) return;
+    const w = path.offsetWidth, h = path.offsetHeight;
+    const y = Math.min(1000, p * 1000);
+    gsap.set(tip, { x: (vineX(y) / 100) * w - tip.offsetWidth / 2, y: p * h - tip.offsetHeight / 2, rotation: p * 900, autoAlpha: p > 0.004 && p < 0.996 ? 1 : 0 });
+  };
+  gsap.fromTo(vine, { clipPath: 'inset(0px -20px 100% -20px)' }, {
+    clipPath: 'inset(0px -20px 0% -20px)', ease: 'none',
+    scrollTrigger: { trigger: book, start: 'top 70%', end: 'bottom 70%', scrub: 0.6, onUpdate: (self) => moveTip(self.progress), onRefresh: (self) => moveTip(self.progress) },
   });
   gsap.to('.journey__year', { yPercent: 120, ease: 'none', scrollTrigger: { trigger: book, start: 'top bottom', end: 'bottom top', scrub: true } });
   $$('.entry', book).forEach((e) => {
     const left = e.dataset.side === 'l' || !isDesktop();
-    const card = $('.entry__card', e), note = $('.entry__note', e), dot = $('.entry__dot', e);
+    // the wrapper flies in; the polaroid inside keeps its CSS tilt & hover
+    const card = $('.entry__cardwrap', e), note = $('.entry__note', e), dot = $('.entry__dot', e);
     const tl = gsap.timeline({ scrollTrigger: { trigger: e, start: 'top 80%', once: true } });
     tl.from(dot, { scale: 0, rotation: -180, duration: 0.6, ease: 'back.out(3)' })
       .from(card, { x: left ? -80 : 80, y: 60, rotation: left ? -18 : 18, autoAlpha: 0, duration: 1, ease: 'back.out(1.4)' }, 0.05)

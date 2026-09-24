@@ -1,10 +1,12 @@
 ---
 /**
  * "radio.exe" — the party section. A big pastel turntable plays the song through a visible
- * YouTube player; when it starts the lights come on: a peach disco ball drops in, beams sweep,
- * speakers pump, EQ bars jump and the karaoke box follows the lyrics (LRC in src/data/site.ts).
+ * YouTube player; when it starts the lights come on: peach disco balls drop in, the tonearm lowers
+ * onto the record, peaches dance on the speakers, EQ bars jump and the karaoke box follows the
+ * lyrics (LRC in src/data/site.ts). The song is copyrighted — the warning sits right on the play buttons.
  */
 import Scribble from './svg/Scribble.astro';
+import PeachMascot from './svg/PeachMascot.astro';
 import { song } from '../data/site';
 
 const label = 'PEACHI RADIO ✦ ' + song.title.toUpperCase() + ' ✦ WELCOME BACK ✦ ';
@@ -71,6 +73,7 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
 
   <div class="radio__stage wrap">
     <div class="speaker speaker--l" aria-hidden="true">
+      <div class="dancer" data-dancer><PeachMascot id="dl" limbs mood="happy" /></div>
       <span class="speaker__ears"><i></i><i></i></span>
       <span class="speaker__tw"></span>
       <span class="speaker__woof"><span></span></span>
@@ -106,12 +109,18 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
           </svg>
           <span class="tt__glare"></span>
         </div>
-        <svg class="tt__arm" viewBox="0 0 90 230" data-arm aria-hidden="true">
-          <circle cx="62" cy="26" r="22" fill="#fff" stroke="#e45d86" stroke-width="4"></circle>
-          <circle cx="62" cy="26" r="8" fill="#fa93d2"></circle>
-          <path d="M62 26 L66 150 Q66 176 44 196" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"></path>
-          <path d="M62 26 L66 150 Q66 176 44 196" fill="none" stroke="#ebcfe0" stroke-width="3.5" stroke-linecap="round"></path>
-          <rect x="26" y="188" width="30" height="20" rx="5" transform="rotate(32 41 198)" fill="#f569c0" stroke="#fff" stroke-width="3"></rect>
+        <!-- tonearm: drawn in deck-width units (1 = 1cqw) with the pivot at 0,0 and the stylus at 0,41 -->
+        <svg class="tt__arm" viewBox="-8 -8 16 52" data-arm aria-hidden="true">
+          <rect x="-3.4" y="-7.4" width="6.8" height="5.4" rx="1.8" fill="#fff" stroke="#e45d86" stroke-width=".8"></rect>
+          <path d="M0 0V35.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"></path>
+          <path d="M0 0V35.5" fill="none" stroke="#e9c9dc" stroke-width="1.1" stroke-linecap="round"></path>
+          <g transform="rotate(16 0 39)">
+            <rect x="-2.7" y="35.2" width="5.4" height="6.6" rx="1.5" fill="#f569c0" stroke="#fff" stroke-width=".8"></rect>
+            <rect x="-1.1" y="36.6" width="2.2" height="2.2" rx=".6" fill="#fff" opacity=".7"></rect>
+            <path d="M0 41.8v1.2" stroke="#4a1f2e" stroke-width=".8" stroke-linecap="round"></path>
+          </g>
+          <circle r="5.2" fill="#fff" stroke="#e45d86" stroke-width="1"></circle>
+          <circle r="2.1" fill="#fa93d2"></circle>
         </svg>
         <div class="tt__panel" aria-hidden="true">
           <span class="tt__led"></span>
@@ -121,9 +130,11 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
         <p class="tt__brand" aria-hidden="true">PEACHI RADIO</p>
       </div>
       <div class="tt__notes" data-notes aria-hidden="true"></div>
+      <div class="dancer dancer--solo" data-dancer aria-hidden="true"><PeachMascot id="ds" limbs mood="happy" /></div>
     </div>
 
     <div class="speaker speaker--r" aria-hidden="true">
+      <div class="dancer dancer--mirror" data-dancer><PeachMascot id="dr" limbs mood="happy" /></div>
       <span class="speaker__ears"><i></i><i></i></span>
       <span class="speaker__tw"></span>
       <span class="speaker__woof"><span></span></span>
@@ -140,6 +151,7 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
         <div class="screen__yt" data-yt></div>
         <button class="screen__cover" type="button" data-play-cover aria-label={`เล่นเพลง ${song.title} — ${song.artist}`}>
           <img src={`https://i.ytimg.com/vi/${song.id}/sddefault.jpg`} alt="" width="640" height="480" loading="lazy" />
+          <span class="screen__warn">⚠ เพลงนี้มีลิขสิทธิ์ · ถ้ากำลังไลฟ์หรืออัดคลิปอยู่ อย่าเพิ่งเปิดนะ เดี๋ยวโดนเคลม</span>
           <span class="screen__play"><svg aria-hidden="true"><use href="#i-play"></use></svg></span>
           <span class="screen__tip hand">กดเพื่อเปิดไฟ &amp; เปิดเพลง!</span>
         </button>
@@ -167,6 +179,7 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
           <input type="range" min="0" max="100" value="70" data-vol />
         </label>
       </div>
+      <p class="np__warn"><span aria-hidden="true">⚠</span> เพลงมีลิขสิทธิ์ของ {song.artist} — กำลังไลฟ์หรืออัดคลิปอยู่ อย่าเพิ่งกดเล่นนะ เดี๋ยวโดนเคลม copyright</p>
       <div class="seek" data-seek role="slider" tabindex="0" aria-label="ตำแหน่งเพลง" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <span class="seek__fill" data-fill></span>
         <span class="seek__peach" data-thumb><svg viewBox="0 0 24 24"><use href="#i-peach"></use></svg></span>
@@ -205,18 +218,27 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
       radial-gradient(50% 45% at 50% 85%, rgba(157, 189, 247, 0.45), transparent 70%);
     animation: party 8s ease-in-out infinite alternate paused;
   }
-  @keyframes party { to { transform: translate3d(3%, -2%, 0) rotate(6deg) scale(1.08); } }
-  .radio__dots {
-    position: absolute; inset: -30%; opacity: 0; transition: opacity 1s;
+  @keyframes party { to { transform: translate3d(1.5%, -1%, 0) scale(1.06); } }
+  /* party stars: they twinkle in place (the old rotating field was dizzying) */
+  .radio__dots { position: absolute; inset: 0; opacity: 0; transition: opacity 1s; }
+  .radio__dots::before, .radio__dots::after {
+    content: ''; position: absolute; inset: 0;
     background-image:
       radial-gradient(circle, rgba(255,255,255,.9) 0 2px, transparent 3px),
-      radial-gradient(circle, rgba(255,190,230,.8) 0 1.6px, transparent 2.6px),
-      radial-gradient(circle, rgba(200,220,255,.8) 0 1.4px, transparent 2.4px);
-    background-size: 90px 70px, 130px 110px, 70px 90px;
-    background-position: 0 0, 40px 30px, 20px 60px;
-    animation: dots 14s linear infinite paused;
+      radial-gradient(circle, rgba(255,190,230,.8) 0 1.6px, transparent 2.6px);
+    background-size: 90px 70px, 130px 110px;
+    background-position: 0 0, 40px 30px;
+    animation: twinkle-dots 2.8s ease-in-out infinite alternate paused;
   }
-  @keyframes dots { to { transform: rotate(360deg); } }
+  .radio__dots::after {
+    background-image:
+      radial-gradient(circle, rgba(200,220,255,.85) 0 1.4px, transparent 2.4px),
+      radial-gradient(circle, rgba(255,240,200,.85) 0 1.8px, transparent 2.8px);
+    background-size: 70px 90px, 150px 120px;
+    background-position: 20px 60px, 75px 10px;
+    animation-duration: 2.1s; animation-delay: -1s;
+  }
+  @keyframes twinkle-dots { from { opacity: 0.25; } to { opacity: 1; } }
   .radio__beams { position: absolute; left: 0; right: 0; top: -10%; height: 110%; opacity: 0; transition: opacity 0.8s; }
   .radio__beams i {
     position: absolute; top: 0; width: 34vw; height: 100%; transform-origin: 50% 0;
@@ -227,10 +249,17 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
   .radio__beams i:nth-child(2) { left: 26%; background: conic-gradient(from 168deg at 50% 0, transparent 0deg, rgba(190, 160, 255, 0.35) 12deg, transparent 24deg); }
   .radio__beams i:nth-child(3) { left: 44%; background: conic-gradient(from 168deg at 50% 0, transparent 0deg, rgba(160, 200, 255, 0.32) 12deg, transparent 24deg); }
   .radio__beams i:nth-child(4) { left: 66%; }
+  @keyframes beam { from { rotate: -6deg; } to { rotate: 6deg; } }
+  .radio[data-state='playing'] .radio__beams i { animation: beam 7s ease-in-out infinite alternate; }
+  .radio[data-state='playing'] .radio__beams i:nth-child(2) { animation-delay: -2.5s; }
+  .radio[data-state='playing'] .radio__beams i:nth-child(3) { animation-delay: -5s; }
+  .radio[data-state='playing'] .radio__beams i:nth-child(4) { animation-delay: -1.2s; }
   .radio[data-state='playing'] .radio__party,
   .radio[data-state='playing'] .radio__dots,
   .radio[data-state='playing'] .radio__beams { opacity: 1; }
-  .radio[data-state='playing'] .radio__party, .radio[data-state='playing'] .radio__dots { animation-play-state: running; }
+  .radio[data-state='playing'] .radio__party,
+  .radio[data-state='playing'] .radio__dots::before,
+  .radio[data-state='playing'] .radio__dots::after { animation-play-state: running; }
 
   .ball { position: absolute; top: 0; width: clamp(96px, 10vw, 150px); translate: -50% -100%; transition: translate 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .ball--l { left: 12%; }
@@ -269,15 +298,21 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
 
   .tt { position: relative; }
   .tt__deck {
-    position: relative; width: clamp(300px, 36vw, 520px); aspect-ratio: 1.22;
+    position: relative; width: clamp(300px, 36vw, 520px); aspect-ratio: 1.22; container-type: inline-size;
     border-radius: 30px; background: linear-gradient(160deg, #ffe7f3 0%, #fbc3df 100%);
     border: 5px solid #fff; box-shadow: 0 40px 70px -30px rgba(0, 0, 0, 0.7), inset 0 -10px 0 rgba(201, 45, 130, 0.2);
   }
   .tt__platter { position: absolute; left: 6%; top: 8%; width: 70%; aspect-ratio: 1; border-radius: 50%; background: #e3c7d7; box-shadow: inset 0 0 0 6px #f6dfe9, 0 16px 30px -12px rgba(0, 0, 0, 0.5); }
   .tt__vinyl { position: absolute; inset: 4%; width: 92%; height: 92%; will-change: transform; }
   .tt__glare { position: absolute; inset: 4%; border-radius: 50%; pointer-events: none; background: conic-gradient(from 20deg, transparent 0 25deg, rgba(255,255,255,.22) 40deg, transparent 58deg 200deg, rgba(255,255,255,.14) 215deg, transparent 232deg); }
-  .tt__arm { position: absolute; right: 3%; top: 4%; width: 17%; height: auto; transform-origin: 68.9% 11.3%; rotate: -28deg; transition: rotate 1s var(--ease-pop); filter: drop-shadow(0 6px 4px rgba(0,0,0,.25)); }
-  .radio[data-state='playing'] .tt__arm { rotate: -2deg; }
+  /* pivot at (86cqw, 13cqw); the stylus sits 41cqw away — long enough to travel from the outer groove to
+     the label. Only GSAP rotates it (music.ts); --lift raises it off the record while it swings */
+  .tt__arm {
+    --lift: 0;
+    position: absolute; z-index: 2; left: 78cqw; top: 5cqw; width: 16cqw; height: 52cqw;
+    transform-origin: 8cqw 8cqw; overflow: visible;
+    filter: drop-shadow(0 calc(0.7cqw + var(--lift) * 1.8cqw) calc(0.5cqw + var(--lift) * 1cqw) rgba(0, 0, 0, 0.28));
+  }
   .tt__panel { position: absolute; right: 5%; bottom: 8%; display: grid; justify-items: center; gap: 10px; }
   .tt__led { width: 12px; height: 12px; border-radius: 50%; background: #caa9bb; }
   .radio[data-state='playing'] .tt__led { background: #3ad07a; box-shadow: 0 0 12px #3ad07a; }
@@ -288,6 +323,17 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
   .tt__brand { position: absolute; left: 8%; bottom: 3.5%; font-family: var(--font-pixel); font-weight: 700; font-size: clamp(0.7rem, 1vw, 0.9rem); letter-spacing: 0.2em; color: var(--pink-500); }
   .tt__notes { position: absolute; inset: 0; pointer-events: none; }
   .tt__notes :global(svg) { position: absolute; left: 40%; top: 40%; width: 26px; height: 26px; color: var(--pink-200); filter: drop-shadow(0 0 6px rgba(255, 170, 220, 0.8)); }
+
+  /* ── dancing peaches: on top of each speaker (desktop), next to the deck on phones ── */
+  .speaker .dancer { position: absolute; left: 50%; bottom: calc(100% - 8px); translate: -50% 0; width: 74%; z-index: 0; pointer-events: none; }
+  .dancer :global(.peach) { transform-origin: 50% 100%; }
+  .dancer--mirror { scale: -1 1; } /* mirrored on the wrapper — GSAP owns the peach's own transform */
+  .dancer--solo { display: none; }
+  /* while dancing, GSAP drives the peach — switch off its idle bob/squish/leaf CSS loops */
+  .dancer.is-dancing :global(.peach--idle .peach__bob),
+  .dancer.is-dancing :global(.peach--idle .peach__squish),
+  .dancer.is-dancing :global(.peach--idle .peach__leaf--l),
+  .dancer.is-dancing :global(.peach--idle .peach__leaf--r) { animation: none; }
 
   /* ── console: video screen + controls ── */
   .radio__console { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(18px, 3vw, 36px); margin-top: clamp(30px, 5vw, 56px); align-items: stretch; color: var(--ink); }
@@ -305,6 +351,12 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
   .screen__play svg { width: 36px; height: 36px; margin-left: 5px; }
   @keyframes pulse { 50% { scale: 1.08; } }
   .screen__tip { position: absolute; left: 50%; bottom: 12%; translate: -50% 0; white-space: nowrap; font-size: 1.2rem; color: #fff; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
+  .screen__warn {
+    position: absolute; left: 50%; top: 7%; translate: -50% 0; width: max-content; max-width: 90%;
+    padding: 6px 14px; border-radius: 999px; background: rgba(255, 245, 205, 0.96); color: #6b4700;
+    font-size: 0.82rem; font-weight: 500; line-height: 1.35; text-align: center;
+    box-shadow: 0 8px 18px -8px rgba(0, 0, 0, 0.7);
+  }
   .screen__blocked { position: absolute; inset: 0; display: grid; place-content: center; gap: 6px; text-align: center; color: #fff; padding: 20px; }
   .screen__blocked[hidden] { display: none; }
   .screen__blocked a { color: var(--pink-200); }
@@ -335,6 +387,11 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
   .ctl--big .ic-pause, .radio[data-state='playing'] .ctl--big .ic-play { display: none; }
   .radio[data-state='playing'] .ctl--big .ic-pause { display: block; }
   .vol { display: flex; align-items: center; gap: 6px; margin-left: auto; color: var(--pink-400); }
+  .np__warn {
+    display: flex; gap: 6px; align-items: flex-start; margin: 2px 0 4px;
+    padding: 6px 10px; border-radius: 12px; background: #fff6d6; border: 1.5px solid #f5d98b;
+    font-size: 0.8rem; line-height: 1.45; color: #7a5200;
+  }
   .vol svg { width: 22px; height: 22px; }
   .vol input { width: 90px; accent-color: var(--pink-400); }
   .seek { position: relative; height: 12px; border-radius: 99px; background: var(--pink-100); touch-action: none; }
@@ -369,6 +426,8 @@ const bars = Array.from({ length: 36 }, (_, i) => i);
     .radio__stage { grid-template-columns: 1fr; justify-items: center; }
     .speaker { display: none; }
     .tt__deck { width: min(88vw, 420px); }
+    .dancer--solo { display: block; position: absolute; left: -4%; bottom: -5%; width: 24%; z-index: 3; pointer-events: none; }
+    .tt__brand { display: none; }
     .radio__console { grid-template-columns: 1fr; }
     .vol input { width: 70px; }
   }

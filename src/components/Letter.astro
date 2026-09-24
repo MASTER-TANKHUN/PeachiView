@@ -8,7 +8,7 @@ import newyear from '../assets/posts/newyear.jpg';
 import { letter } from '../data/site';
 
 const memories = [
-  { src: meme, alt: 'มีมพีชชี่ฝีมือ TANKHUNGAMING: พีชชี่ใส่ผมนารูโตะ แว่นดำ ฟันฉลาม และสร้อยทอง', cap: 'มีมที่เคยทำให้เมื่อ 4 ปีก่อน (ขอโทษษ 555)', rot: -5 },
+  { src: meme, alt: 'มีมพีชชี่ฝีมือ TANKHUNGAMING: พีชชี่ใส่ผมนารูโตะ แว่นดำ ฟันฉลาม และสร้อยทอง', cap: 'มีมที่เคยทำให้เมื่อ 4 ปีก่อน', rot: -5 },
   { src: xmas, alt: 'ภาพวาดพีชชี่ในชุดชมพูกับเพื่อนสาวผมขาว Merry Christmas', cap: 'Merry Christmas 2021 🎄', rot: 3 },
   { src: newyear, alt: 'พีชชี่ใส่หมวกปาร์ตี้ในภาพ 2022?!', cap: '2022?! ปีที่เราไม่ได้เจอกัน', rot: -2 },
 ];
@@ -23,6 +23,7 @@ const memories = [
   <div class="letter__layout wrap">
     <div class="letter__stage" data-letter>
       <div class="env env--back" aria-hidden="true"></div>
+      <div class="env env--flap" aria-hidden="true"></div>
       <article class="paper">
         <span class="washi washi--peach paper__tape" aria-hidden="true"></span>
         <div class="paper__peach" aria-hidden="true"><PeachMascot id="lm" /></div>
@@ -33,8 +34,9 @@ const memories = [
         <p class="paper__from">{letter.from}</p>
         <p class="paper__sign hand">{letter.signature}</p>
       </article>
-      <div class="env env--front" aria-hidden="true"></div>
-      <div class="env env--flap" aria-hidden="true"></div>
+      <div class="env env--front" aria-hidden="true">
+        <svg class="env__seams" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 49 58M100 100 51 58"></path></svg>
+      </div>
       <button class="seal" type="button" aria-label="เปิดจดหมาย" tabindex="-1">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-peach"></use></svg>
       </button>
@@ -42,13 +44,15 @@ const memories = [
 
     <aside class="memories" aria-label="ความทรงจำ">
       {memories.map((m, i) => (
-        <figure class="memory polaroid" style={`--rot:${m.rot}deg`}>
-          <span class={['washi', 'washi washi--dots', 'washi washi--sky'][i]} aria-hidden="true" />
-          <div class="memory__img">
-            <Picture src={m.src} alt={m.alt} widths={[280, 440]} sizes="(max-width: 900px) 44vw, 240px" formats={['avif', 'webp']} fallbackFormat="webp" loading="lazy" />
-          </div>
-          <figcaption class="polaroid__cap">{m.cap}</figcaption>
-        </figure>
+        <div class="memory-wrap">
+          <figure class="memory polaroid" style={`--rot:${m.rot}deg`}>
+            <span class={['washi', 'washi washi--dots', 'washi washi--sky'][i]} aria-hidden="true" />
+            <div class="memory__img">
+              <Picture src={m.src} alt={m.alt} widths={[280, 440]} sizes="(max-width: 900px) 44vw, 240px" formats={['avif', 'webp']} fallbackFormat="webp" loading="lazy" />
+            </div>
+            <figcaption class="polaroid__cap">{m.cap}</figcaption>
+          </figure>
+        </div>
       ))}
       <div class="hearts">
         <button class="btn heart-btn" type="button" data-hearts>
@@ -65,7 +69,9 @@ const memories = [
   .letter__head { display: grid; justify-items: center; text-align: center; gap: 14px; margin-bottom: clamp(40px, 6vw, 70px); }
   .letter__layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr); gap: clamp(30px, 5vw, 70px); align-items: start; }
 
-  .letter__stage { position: relative; padding-top: 40px; }
+  /* envelope geometry: the flap's edges and the front pocket's top edge meet exactly, so a closed
+     envelope shows nothing of the letter; a short flap leaves room for it to flip open under the title */
+  .letter__stage { --env-top: 60px; --env-h: 300px; --flap-h: 108px; position: relative; padding-top: var(--env-top); }
   .paper {
     position: relative; z-index: 2;
     padding: 56px clamp(22px, 5vw, 60px) 50px;
@@ -92,31 +98,31 @@ const memories = [
   /* envelope (only used when JS runs the opening animation) */
   .env, .seal { display: none; }
   :global(.js) .env, :global(.js) .seal { display: block; }
-  .env { position: absolute; left: -3%; right: -3%; top: 40px; height: 300px; pointer-events: none; }
-  .env--back { z-index: 1; background: linear-gradient(180deg, #ffc1df, #f9a5cf); border-radius: 12px; box-shadow: 0 30px 50px -30px rgba(201, 45, 130, 0.7); }
+  .env { position: absolute; left: -3%; right: -3%; top: var(--env-top); height: var(--env-h); pointer-events: none; border-radius: 12px; }
+  .env--back { z-index: 1; background: linear-gradient(180deg, #f7a6cd, #f29ac6); box-shadow: 0 30px 50px -30px rgba(201, 45, 130, 0.7); }
   .env--front {
-    z-index: 3; border-radius: 0 0 12px 12px;
-    background: linear-gradient(180deg, #ffd3e8, #fbb4d6);
-    clip-path: polygon(0 18%, 50% 62%, 100% 18%, 100% 100%, 0 100%);
-    filter: drop-shadow(0 -2px 0 rgba(201, 45, 130, 0.25));
+    z-index: 3;
+    background: linear-gradient(180deg, #ffd6ea, #fbb8d8);
+    clip-path: polygon(0 0, 50% var(--flap-h), 100% 0, 100% 100%, 0 100%);
   }
+  .env__seams { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .env__seams path { fill: none; stroke: rgba(201, 45, 130, 0.22); stroke-width: 2; vector-effect: non-scaling-stroke; }
   .env--flap {
-    z-index: 4; height: 180px; transform-origin: 50% 0;
-    background: linear-gradient(180deg, #f9a5cf, #f48cc2);
+    z-index: 4; height: var(--flap-h); transform-origin: 50% 0; border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, #fbb0d4, #f48cc2);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
   }
   .seal {
-    position: absolute; z-index: 5; left: 50%; top: calc(40px + 150px); width: 76px; height: 76px; translate: -50% -50%;
-    padding: 14px; border: 0; border-radius: 50%;
+    position: absolute; z-index: 5; left: 50%; top: calc(var(--env-top) + var(--flap-h)); width: 76px; height: 76px; translate: -50% -50%;
+    padding: 14px; border: 0; border-radius: 50%; cursor: pointer;
     background: radial-gradient(circle at 35% 30%, #ff8fbf, #d6337c 70%);
     box-shadow: inset 0 -4px 8px rgba(0,0,0,.25), inset 0 3px 6px rgba(255,255,255,.4), 0 8px 16px -6px rgba(120, 0, 60, 0.6);
-    pointer-events: none;
   }
   .seal svg { width: 100%; height: 100%; filter: saturate(0.3) brightness(1.2); opacity: 0.85; }
 
   .memories { position: sticky; top: 90px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 18px; }
   .memory { margin: 0; rotate: var(--rot); transition: rotate 0.35s var(--ease-pop), transform 0.35s var(--ease-pop); }
-  .memory:first-child { grid-column: 1 / -1; width: 78%; justify-self: center; }
+  .memory-wrap:first-child { grid-column: 1 / -1; width: 78%; justify-self: center; }
   .memory:hover { rotate: 0deg; transform: scale(1.04); }
   .memory .washi { top: -12px; left: 50%; translate: -50% 0; rotate: 4deg; }
   .memory__img { aspect-ratio: 1; overflow: hidden; border-radius: 2px; background: var(--pink-100); }
@@ -132,8 +138,7 @@ const memories = [
     .paper__greet, .paper__sign { line-height: 64px; }
     .paper__from { margin-top: 32px; }
     .paper__peach { right: -8px; width: 64px; }
-    .env { height: 240px; }
-    .env--flap { height: 140px; }
-    .seal { top: calc(40px + 120px); width: 62px; height: 62px; }
+    .letter__stage { --env-h: 240px; --flap-h: 86px; }
+    .seal { width: 62px; height: 62px; }
   }
 </style>

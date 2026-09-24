@@ -19,8 +19,17 @@ const spots = [
     <canvas class="wait__snow" aria-hidden="true"></canvas>
 
     <div class="wait__center">
-      <p class="kicker wait__kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-snow"></use></svg> waiting.exe</p>
-      <h2 class="wait__title" id="wait-title">ระหว่างที่พีชชี่หายไป…</h2>
+      <div class="wait__headline">
+        <div class="wait__intro">
+          <p class="kicker wait__kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-snow"></use></svg> waiting.exe</p>
+          <h2 class="wait__title" id="wait-title">ระหว่างที่พีชชี่หายไป…</h2>
+        </div>
+        <!-- at the end of the wait, a message pops up right where the title was -->
+        <Win title="new_message.eml" icon="mail" class="wait__alert">
+          <p class="alert__from"><b>PeachiView</b> <span>· โพสต์ในชุมชน</span></p>
+          <p class="alert__text hand">"ยังจำกันได้มั้ยนะ...."</p>
+        </Win>
+      </div>
       <p class="wait__counter" aria-label={`${daysWaited} วัน`}>
         <span class="wait__num" data-days={daysWaited}>{daysWaited.toLocaleString('en-US')}</span><span class="wait__unit">วัน</span>
       </p>
@@ -59,11 +68,6 @@ const spots = [
       </span>
       <span class="polaroid__cap">เพลงประจำการรอ: Snowman ❄</span>
     </button>
-
-    <Win title="new_message.eml" icon="mail" class="wait__alert">
-      <p class="alert__from"><b>PeachiView</b> <span>· โพสต์ในชุมชน</span></p>
-      <p class="alert__text hand">"ยังจำกันได้มั้ยนะ...."</p>
-    </Win>
   </div>
 </section>
 
@@ -92,7 +96,10 @@ const spots = [
   }
   .wait__snow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-  .wait__center { position: relative; z-index: 3; display: grid; justify-items: center; text-align: center; gap: 6px; padding: 0 var(--gutter); }
+  .wait__center { position: relative; z-index: 6; display: grid; justify-items: center; text-align: center; gap: 6px; padding: 0 var(--gutter); }
+  .wait__headline { display: grid; place-items: center; }
+  .wait__headline > * { grid-area: 1 / 1; }
+  .wait__intro { display: grid; justify-items: center; gap: 6px; }
   .wait__kicker { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.5); color: #fff; }
   .wait__title { font-size: clamp(1.6rem, 3.6vw, 2.8rem); line-height: 1.5; padding-top: 0.15em; color: var(--ink); transition: color 0.4s; }
   .wait.is-night .wait__title { color: #fff; }
@@ -148,19 +155,31 @@ const spots = [
   @keyframes eq { from { height: 4px; } to { height: 18px; } }
   .snowcard .polaroid__cap { color: var(--ink); font-size: 0.95rem; }
 
-  :global(.wait__alert) { position: absolute !important; right: clamp(12px, 6vw, 100px); top: clamp(80px, 14vh, 150px); z-index: 6; width: min(300px, 80vw); color: var(--ink); }
+  .wait__headline :global(.wait__alert) { width: min(320px, 84vw); color: var(--ink); text-align: left; box-shadow: 0 6px 0 -2px var(--pink-200), 0 24px 50px -18px rgba(20, 10, 50, 0.8); }
   :global(.js .wait__alert) { opacity: 0; }
   .alert__from { font-size: 0.85rem; color: var(--ink-faint); }
   .alert__from b { color: var(--pink-500); font-weight: 500; }
   .alert__text { font-size: 1.35rem; color: var(--ink); }
 
   @media (max-width: 900px) {
-    .calendar { left: 50%; top: auto; bottom: 20%; translate: -50% 0; width: 96px; }
+    /* phones: a bottom row that stays clear of the taskbar — calendar (left) and the sleeping peach
+       (right) side by side, the Snowman polaroid centred just above the taskbar */
+    .calendar { left: 7%; top: auto; bottom: calc(246px + env(safe-area-inset-bottom)); translate: none; width: 84px; }
     .wait__center { margin-top: -26vh; }
-    .sleeper { right: 6%; bottom: 23%; width: 92px; }
+    .sleeper { right: 7%; bottom: calc(250px + env(safe-area-inset-bottom)); width: 88px; }
     .msg { max-width: 58vw; font-size: 0.8rem; }
-    .msg:nth-child(n + 6) { display: none; }
-    .snowcard { width: 170px; }
-    :global(.wait__alert) { top: auto; bottom: 30%; right: 50%; translate: 50% 0; }
+    .msg:nth-child(n + 3) { display: none; }
+    .snowcard { width: 150px; bottom: calc(92px + env(safe-area-inset-bottom)); }
+    /* the message pops up top-centre on phones, so the moon moves to the top-left to stay in view */
+    .wait__moon { right: auto; left: 10%; top: 6%; }
+  }
+  @media (max-width: 900px) and (max-height: 740px) {
+    /* short phones: smaller props, row tucked lower so the counter's caption stays clear */
+    .calendar { width: 62px; bottom: calc(194px + env(safe-area-inset-bottom)); }
+    .calendar__rings i { width: 7px; height: 16px; }
+    .calendar__y { font-size: 1.35rem; }
+    .sleeper { width: 68px; bottom: calc(198px + env(safe-area-inset-bottom)); }
+    .snowcard { width: 122px; bottom: calc(84px + env(safe-area-inset-bottom)); }
+    .snowcard .polaroid__cap { font-size: 0.8rem; }
   }
 </style>

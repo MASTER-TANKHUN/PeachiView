@@ -18,6 +18,7 @@ export function initWait() {
     section.classList.add('is-night');
     gsap.set('.wait__night, .wait__stars, .wait__moon', { opacity: 1, y: 0 });
     gsap.set('.msg, .snowcard, .wait__alert', { autoAlpha: 1 });
+    gsap.set('.wait__intro', { opacity: 0 }); // the message takes the title's place (the h2 stays readable)
     gsap.set($$('.calendar__page', section).slice(1), { autoAlpha: 0 }); // show 2026
     if (sleeper) sleeper.dataset.mood = 'wow';
     return;
@@ -52,6 +53,9 @@ export function initWait() {
   });
   tl.fromTo('.snowcard', { autoAlpha: 0, y: 80, rotation: -12 }, { autoAlpha: 1, y: 0, rotation: -3, duration: 0.08, ease: 'back.out(1.6)' }, 0.3)
     .to(msgs, { autoAlpha: 0.35, duration: 0.06, stagger: 0.01 }, 0.86)
+    // the title steps aside (opacity only, so the heading stays in the accessibility tree)…
+    .to('.wait__intro', { opacity: 0, y: -24, scale: 0.9, duration: 0.04, ease: 'power2.in' }, 0.86)
+    // …and a message from Peachi pops up in its place
     .fromTo('.wait__alert', { autoAlpha: 0, scale: 0.3, rotation: -10 }, { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.08, ease: 'back.out(2.2)' }, 0.88)
     .to({}, { duration: 0.06 });
 }

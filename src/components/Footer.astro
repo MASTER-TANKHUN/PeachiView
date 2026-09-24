@@ -3,7 +3,7 @@ import { Picture } from 'astro:assets';
 import PeachMascot from './svg/PeachMascot.astro';
 import PixelHeart from './svg/PixelHeart.astro';
 import banner from '../assets/misc/banner-band.jpg';
-import { socials, profile } from '../data/site';
+import { socials, profile, song } from '../data/site';
 ---
 
 <footer class="footer" aria-labelledby="footer-title">
@@ -30,12 +30,15 @@ import { socials, profile } from '../data/site';
 
   <div class="footer__bottom wrap">
     <p class="credit">
-      Made with <span class="credit__peach" aria-label="ลูกพีช">🍑</span> by <b>Master Tankun | Tankhun Gaming</b>
+      Made with <span class="credit__peach" aria-label="ลูกพีช">🍑</span> by <b>Master Tankhun | Tankhun Gaming</b>
       <span class="credit__sep" aria-hidden="true">·</span>
       <a href="https://github.com/MASTER-TANKHUN" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-github"></use></svg>github</a>
     </p>
     <p class="footer__note">
       เว็บแฟนเมดโดยลูกพีชน้อย ไม่ใช่เว็บทางการของ PeachiView · ภาพ ตัวละคร และคลิปทั้งหมดเป็นของ PeachiView
+    </p>
+    <p class="footer__note">
+      เพลง "{song.title}" เป็นลิขสิทธิ์ของ {song.artist} และเจ้าของผลงาน · เว็บนี้เปิดผ่านตัวเล่นของ YouTube เท่านั้น ไม่ได้เก็บหรือแจกไฟล์เพลง
     </p>
   </div>
 
@@ -66,6 +69,11 @@ import { socials, profile } from '../data/site';
     transition: transform 0.3s var(--ease-pop), box-shadow 0.3s;
   }
   .soc:hover { transform: translateY(-4px) rotate(2deg) scale(1.03); box-shadow: 0 0 0 2px var(--pink-400), 0 18px 30px -14px rgba(201, 45, 130, 0.7); }
+  /* with a mouse these are magnetic: GSAP owns the transform, CSS only animates the shadow */
+  @media (hover: hover) and (pointer: fine) {
+    .soc { transition: box-shadow 0.3s; }
+    .soc:hover { transform: none; }
+  }
   .soc svg { width: 34px; height: 34px; flex: none; }
   .soc span { display: grid; line-height: 1.25; }
   .soc b { font-weight: 500; }

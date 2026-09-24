@@ -4,7 +4,13 @@ import Win from './Win.astro';
 import Scribble from './svg/Scribble.astro';
 import PeachMascot from './svg/PeachMascot.astro';
 import avatar from '../assets/models/v3-avatar.png';
-import { profile, stats, daysWaited } from '../data/site';
+import { profile, stats, daysWaited, videos, categories } from '../data/site';
+
+// what's on the channel, counted from the real video list
+const mix = (['horror', 'roblox', 'minecraft', 'music', 'talk'] as const).map((k) => ({
+  label: categories.find((c) => c.key === k)!.label,
+  n: videos.filter((v) => v.cats.includes(k)).length,
+}));
 
 const stickers = [
   { cls: 's-peach', kind: 'peach' },
@@ -26,8 +32,8 @@ const stickers = [
     <p class="kicker"><svg width="14" height="14" aria-hidden="true"><use href="#i-user"></use></svg> profile.exe</p>
     <h2 class="title-xl" id="about-title">รู้จัก <span class="hl">พีชชี่<Scribble /></span> กันหน่อย</h2>
     <p class="lead">
-      "{profile.nick}" คือ VTuber สาวชาวไทยที่เริ่มจากศูนย์ ไม่รู้เลยว่าอนาคตจะเป็นยังไง จนได้มาเจอ YouTube และได้ค้นพบตัวเอง —
-      ตอนนี้กลับมาพร้อม "พื้นที่เล็กๆ สำหรับงานสร้างสรรค์" ของตัวเอง
+      "{profile.nick}" คือ VTuber สาวชาวไทย สายเกมผี Roblox และ Minecraft เจ้าของคลิปสอนเป็น VTuber ยอดวิวหลักแสน —
+      และเป็นคนที่ลูกพีชน้อยรอมาตลอด 4 ปี
     </p>
   </div>
 
@@ -80,11 +86,11 @@ const stickers = [
         <p class="stat__label">วันที่ลูกพีชน้อยรอ</p>
       </Win>
       <div class="focus" data-reveal>
-        <p class="hand focus__title">แนวใหม่ของปี 2026 ✦</p>
+        <p class="hand focus__title">ในช่องพีชชี่มีอะไรบ้าง ✦</p>
         <ul class="focus__list">
-          {profile.focus.map((f) => <li>{f}</li>)}
+          {mix.map((m) => <li>{m.label} <b>{m.n}</b></li>)}
         </ul>
-        <p class="focus__tag">{profile.tagline} 🍑</p>
+        <p class="focus__tag">นับจากคลิปทั้งหมด {stats.videos} คลิปในช่อง 🍑</p>
       </div>
     </div>
   </div>
@@ -190,9 +196,11 @@ const stickers = [
   .focus__title { font-size: 1.2rem; color: var(--ink); margin-bottom: 8px; }
   .focus__list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0 0 10px; padding: 0; }
   .focus__list li {
-    font-family: var(--font-pixel); font-weight: 500; font-size: 1rem;
-    padding: 4px 12px; border-radius: 8px; background: #fff; border: 2px solid var(--pink-300); color: var(--pink-500);
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+    padding: 4px 6px 4px 12px; border-radius: 8px; background: #fff; border: 2px solid var(--pink-300); color: var(--pink-500);
   }
+  .focus__list li b { font-family: var(--font-pixel); font-size: 0.8rem; min-width: 1.8em; text-align: center; padding: 0 6px; border-radius: 6px; background: var(--pink-50); color: inherit; }
   .focus__list li:nth-child(2) { border-color: var(--lilac-300); color: var(--lilac-400); }
   .focus__list li:nth-child(3) { border-color: var(--sky-300); color: #5b86d6; }
   .focus__list li:nth-child(4) { border-color: var(--peach-300); color: #e0707a; }

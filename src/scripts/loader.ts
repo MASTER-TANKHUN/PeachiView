@@ -1,15 +1,26 @@
 import { gsap, $, $$, reduceMotion } from './core';
 import { onProgress, portraitAssets } from './assets';
 
-const messages = ['กำลังปลุกพีชชี่…', 'ใส่หูฟังหูแมว…', 'เก็บลูกพีช 1,702 ลูก…', 'ปัดฝุ่นช่อง YouTube…', 'พร้อมแล้ว!'];
+const messages = ['กำลังปลุกพีชชี่…', 'ใส่หูฟังหูแมว…', 'นับวันรอ 1,702 วัน…', 'ปัดฝุ่นช่อง YouTube…', 'พร้อมแล้ว!'];
+
+interface LoaderHooks {
+  /** runs while the loader still covers the page — build/measure everything here */
+  beforeOpen?: () => void;
+  /** runs as the loader starts to open — start the hero entrance here */
+  onOpen?: () => void;
+}
 
 /** "PeachiOS" boot screen. Resolves when the loader has irised out. */
-export function runLoader(): Promise<void> {
+export function runLoader({ beforeOpen, onOpen }: LoaderHooks = {}): Promise<void> {
   const root = $('#loader');
-  if (!root) return Promise.resolve();
+  if (!root) { beforeOpen?.(); onOpen?.(); return Promise.resolve(); }
   const finish = () => { root.remove(); };
   if (reduceMotion) {
-    return Promise.race([portraitAssets.then(() => undefined), new Promise<void>((r) => setTimeout(r, 1200))]).then(finish);
+    return Promise.race([portraitAssets.then(() => undefined), new Promise<void>((r) => setTimeout(r, 1200))]).then(() => {
+      beforeOpen?.();
+      finish();
+      onOpen?.();
+    });
   }
 
   const quick = sessionStorage.getItem('peachi-booted') === '1';
@@ -49,6 +60,7 @@ export function runLoader(): Promise<void> {
       if (closed) return;
       closed = true;
       gsap.ticker.remove(update);
+      beforeOpen?.();
       const r = mascot.getBoundingClientRect();
       const cx = ((r.left + r.width / 2) / window.innerWidth) * 100;
       const cy = ((r.top + r.height / 2) / window.innerHeight) * 100;
@@ -56,7 +68,9 @@ export function runLoader(): Promise<void> {
         .to(mascot, { y: -26, scaleY: 1.1, scaleX: 0.92, duration: 0.25, ease: 'power2.out', transformOrigin: '50% 100%' })
         .to(mascot, { y: 0, scaleY: 0.85, scaleX: 1.12, duration: 0.18, ease: 'power2.in' })
         .to(mascot, { scaleX: 1, scaleY: 1, duration: 0.3, ease: 'elastic.out(1, 0.4)' })
-        .fromTo(root, { clipPath: `circle(150% at ${cx}% ${cy}%)` }, { clipPath: `circle(0% at ${cx}% ${cy}%)`, duration: 0.9, ease: 'power4.inOut' }, '-=0.15');
+        .addLabel('open', '-=0.15')
+        .fromTo(root, { clipPath: `circle(150% at ${cx}% ${cy}%)` }, { clipPath: `circle(0% at ${cx}% ${cy}%)`, duration: 0.9, ease: 'power4.inOut' }, 'open')
+        .add(() => onOpen?.(), 'open');
     };
     $('.loader__skip', root)?.addEventListener('click', () => { target = 1; shown.p = 1; close(); });
     // never hang on a slow network

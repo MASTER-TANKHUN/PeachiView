@@ -1,7 +1,8 @@
 ---
-const a = ['WELCOME BACK PEACHI', 'ยินดีต้อนรับกลับมา', 'CREATE • IMAGINE • EXPLORE', 'ลูกพีชน้อยคิดถึงมาก'];
-const b = ['1,702 DAYS LATER', '3D • ANIMATION • CHARACTERS • STORIES', 'PEACHI IS BACK', 'กลับมาแล้วนะคะ'];
+const a = ['WELCOME BACK PEACHI', 'ยินดีต้อนรับกลับมา', 'ดีใจที่ได้เจอกันอีกนะ', 'ลูกพีชน้อยคิดถึงมาก'];
+const b = ['1,702 DAYS LATER', 'รอดูคลิปใหม่อยู่นะ', 'PEACHI IS BACK', 'กลับมาแล้วนะคะ'];
 const row = (items: string[]) => [...items, ...items];
+const thai = (t: string) => /[\u0E00-\u0E7F]/.test(t);
 ---
 
 <div class="ribbons" aria-hidden="true">
@@ -11,7 +12,7 @@ const row = (items: string[]) => [...items, ...items];
         <div class="ribbon__group">
           {row(a).map((t) => (
             <>
-              <span>{t}</span>
+              <span class:list={[thai(t) && 'th']}>{t}</span>
               <svg class="ribbon__icon"><use href="#i-peach" /></svg>
             </>
           ))}
@@ -25,7 +26,7 @@ const row = (items: string[]) => [...items, ...items];
         <div class="ribbon__group">
           {row(b).map((t) => (
             <>
-              <span>{t}</span>
+              <span class:list={[thai(t) && 'th']}>{t}</span>
               <svg class="ribbon__icon ribbon__icon--spark"><use href="#i-spark" /></svg>
             </>
           ))}
@@ -36,7 +37,8 @@ const row = (items: string[]) => [...items, ...items];
 </div>
 
 <style>
-  .ribbons { position: relative; z-index: 5; height: clamp(120px, 16vw, 190px); margin: -40px 0 0; pointer-events: none; }
+  /* clip sideways only: the tilted, swinging ribbons must never widen the page (phones would zoom out) */
+  .ribbons { position: relative; z-index: 5; height: clamp(120px, 16vw, 190px); margin: -40px 0 0; pointer-events: none; overflow-x: clip; overflow-y: visible; }
   .ribbon {
     position: absolute; left: -5%; right: -5%; top: 50%;
     overflow: hidden; white-space: nowrap;
@@ -55,8 +57,7 @@ const row = (items: string[]) => [...items, ...items];
     font-family: var(--font-pixel); font-weight: 700; letter-spacing: 0.04em;
     font-size: clamp(1.05rem, 2vw, 1.6rem); line-height: 1;
   }
-  .ribbon--pink .ribbon__group span:nth-child(4n + 3) { font-family: var(--font-display); font-weight: 700; }
-  .ribbon--white .ribbon__group span:nth-child(8n + 7) { font-family: var(--font-display); }
+  .ribbon__group span.th { font-family: var(--font-display); font-weight: 700; }
   .ribbon__icon { width: 26px; height: 26px; flex: none; }
   .ribbon__icon--spark { color: var(--pink-300); width: 20px; height: 20px; }
 </style>

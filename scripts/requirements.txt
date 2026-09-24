@@ -4,3 +4,4 @@ numpy
 opencv-python-headless
 scikit-image
 rembg[cpu]
+segno            # make_qr.py
